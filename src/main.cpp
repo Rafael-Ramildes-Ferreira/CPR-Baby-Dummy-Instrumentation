@@ -15,23 +15,25 @@ void loop() {
 }
 
 double read_sensor(){
-  static double yn1 = 0, yn2 = 0, xn0 = 0, xn1 = 0;
+  // Filter values
+  static double yn = 0, yn1 = 0, yn2 = 0, xn = 0, xn1 = 0;
 
+  // Reads the sensor
   uint8_t range = dist_sensor.readRange();
-
   if (dist_sensor.readRangeStatus() == VL6180X_ERROR_NONE) {
-    xn0 = range;
+    xn = range;
     
   }else{
-    xn0 = UINT8_MAX; // Used to be 200 (is that the maximum distance? [todo])
+    // xn = UINT8_MAX; // Used to be 200 (is that the maximum distance? [todo])
+    return yn; // Ignores failed reading
   }
 
   // Compute the filtered signal
-  double yn = 1.656*yn1 - 0.6859*yn2 + 0.01568*xn0 + 0.01383*xn1;
+  yn = 1.656*yn1 - 0.6859*yn2 + 0.01568*xn + 0.01383*xn1;
 
   // Updates values
   // delay(1); // Why delay?
-  xn1 = xn0;
+  xn1 = xn;
   yn2 = yn1;
   yn1 = yn;
 
