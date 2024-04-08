@@ -1,18 +1,25 @@
 #include <Arduino.h>
+#include <Adafruit_VL6180X.h>
+#include "main.h"
 
-// put function declarations here:
-int myFunction(int, int);
+Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  if (!dist_sensor.begin()) {
+    error_handler();
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+
+void error_handler(){
+  while (1)
+  {
+    /* Does nothing */
+    /* It could blink a led or something, but the watch dog will probably restart it*/
+  }
+  
 }
