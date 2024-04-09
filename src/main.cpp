@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Adafruit_VL6180X.h>
 #include "main.h"
+#include "chest_compressions.h"
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
@@ -40,21 +41,6 @@ double filtered_read_sensor(){
 
   return yn/10.0;
 }
-
-int calc_frequency(double distance){
-  double t0 = last_peak();
-  double t1 = last_valley();
-  
-  double period = 2*abs(t0 - t1);
-
-  return 1/period;
-}
-
-/**
- * Se o peito estiver parado em cima, deve sempre considerar pico
-*/
-bool identify_peak()
-double last_peak()
 
 
 void error_handler(){
