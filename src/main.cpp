@@ -11,10 +11,11 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  double distance = filtered_read_sensor();
+  calc_frequency(distance);
 }
 
-double read_sensor(){
+double filtered_read_sensor(){
   // Filter values
   static double yn = 0, yn1 = 0, yn2 = 0, xn = 0, xn1 = 0;
 
@@ -39,6 +40,21 @@ double read_sensor(){
 
   return yn/10.0;
 }
+
+int calc_frequency(double distance){
+  double t0 = last_peak();
+  double t1 = last_valley();
+  
+  double period = 2*abs(t0 - t1);
+
+  return 1/period;
+}
+
+/**
+ * Se o peito estiver parado em cima, deve sempre considerar pico
+*/
+bool identify_peak()
+double last_peak()
 
 
 void error_handler(){
