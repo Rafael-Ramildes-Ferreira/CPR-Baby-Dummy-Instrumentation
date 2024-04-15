@@ -1,19 +1,40 @@
 #include <Arduino.h>
 #include <Adafruit_VL6180X.h>
+#include <Adafruit_I2CDevice.h>
+#include <Wire.h>
+#include <SPI.h>
 #include "main.h"
 #include "chest_compressions.h"
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
+int i = 0;
+
 void setup() {
+  ESP.wdtDisable();//Desabilita o SW WDT. 
+
+  Serial.begin(115200);
+  delay(1);
+  Serial.println("Começando");
+
   if (!dist_sensor.begin()) {
     error_handler();
   }
+  ESP.wdtFeed();
 }
 
 void loop() {
-  double distance = filtered_read_sensor();
+  // double distance = filtered_read_sensor();
+  double distance = 3.1416;
   calc_frequency(distance);
+  ESP.wdtFeed();
+
+  Serial.print("Distância: ");
+  Serial.println(distance);
+  // i++;
+  // if(i%5 == 0)
+  // Serial.println("Hello World!!");
+  ESP.wdtFeed();
 }
 
 double filtered_read_sensor(){
@@ -48,6 +69,7 @@ void error_handler(){
   {
     /* Does nothing */
     /* It could blink a led or something, but the watch dog will probably restart it*/
+    Serial.println("ERROR!!!");
   }
   
 }

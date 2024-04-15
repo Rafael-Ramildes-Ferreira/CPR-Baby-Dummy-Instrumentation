@@ -31,6 +31,8 @@ double last_peak(double distance){
 	// Gets time series features
 	double mean = calculate_mean(readings,BUFFER_SIZE);
 	double deviation = calculate_std_deviation(readings,mean,BUFFER_SIZE);
+  	Serial.print("Desvio: ");
+  	Serial.println(deviation);
 
 	// Calculate a new last_peak if deviation is small
 	if(deviation > DEVIATION_THRESHOLD){
@@ -45,6 +47,7 @@ double last_peak(double distance){
 
 		if(is_bigger){
 			last_peak = millis();
+			Serial.println("Pico!!  <----");
 		} 
 	}
 
@@ -52,6 +55,34 @@ double last_peak(double distance){
 }
 
 double last_valley(double distance){
-	return 0.0;
+	static double readings[BUFFER_SIZE];
+	static int index = 0;
+	static double last_valley = millis();
 
+	// Updates recently read values list
+	readings[index%BUFFER_SIZE] = distance;
+	index++;
+
+	// Gets time series features
+	double mean = calculate_mean(readings,BUFFER_SIZE);
+	double deviation = calculate_std_deviation(readings,mean,BUFFER_SIZE);
+
+	// Calculate a new last_valley if deviation is small
+	if(deviation > DEVIATION_THRESHOLD){
+
+		// Checks if distance is smaller than recently read values
+		bool is_smaller = true;
+		for(double value : readings){
+			if(distance > value){
+				is_smaller = false;
+			}
+		}
+
+		if(is_smaller){
+			last_valley = millis();
+			Serial.println("Vale!!  <----");
+		} 
+	}
+
+	return last_valley;
 }
