@@ -26,13 +26,33 @@ WiFiServer server(80);
 volatile bool statusLed = false;
 volatile uint32_t lastMillis = 0;
 
+/* Private functions prototypes */
+static int set_timer_interrupt(void func(void));
+
 /**
  * @returns Status
  * 			0: No Error
  * 			-1: Error
 */
 int wifi_start(){
-	if(!ITimer.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, send_wifi)){
+	// Configures the periodically routine in which messages are sent
+	set_timer_interrupt(send_wifi);
+	
+	// Configurar a ESP8266 como ponto de acesso
+	WiFi.softAP(ssid);
+
+	return 0;
+}
+
+/**
+ * @brief Sets a periadical timer interrupt to send the wireless messages
+ * @param func: Function that describes the routine used to send the messages
+ * @returns Stauts:
+ * 			0: No error
+ * 			-1: Error
+*/
+static int set_timer_interrupt(void func(void)){
+	if(!ITimer.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, func)){
 		#ifdef DEBUG
 			Serial.println("ERROR: Periodical Wireless transmition failed");
 		#endif
@@ -45,13 +65,13 @@ int wifi_start(){
 		Serial.println(" msec");
 	}
 	#endif
-	
-	// Configurar a ESP8266 como ponto de acesso
-	WiFi.softAP(ssid);
 
-	return 0;
+	return 0; // No error
 }
 
+/**
+ * @brief Routine to send Wi-Fi messages of the operation status
+*/
 void send_wifi(){
   // Verificar se há clientes
   WiFiClient client = server.available();
