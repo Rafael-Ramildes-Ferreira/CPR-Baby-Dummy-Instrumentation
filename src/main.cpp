@@ -6,15 +6,17 @@
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
+double distance = 42, frequency = 42;
+
 void setup() {
   #ifdef DEBUG
   Serial.begin(115200);
   Serial.println("");
   #endif
 
-  if (!dist_sensor.begin()) {
-    error_handler();
-  }
+  // if (!dist_sensor.begin()) {
+  //   error_handler();
+  // }
 
   wifi_start();
 }

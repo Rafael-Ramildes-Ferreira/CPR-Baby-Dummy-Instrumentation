@@ -1,3 +1,6 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include "main.h"
 #include "buildconfig.h"
 #include "wireless.h"
 #include "ESP8266TimerInterrupt.h"
@@ -12,6 +15,12 @@
 
 // Init ESP8266 timer 1
 ESP8266Timer ITimer;
+
+// Configuração do hotspot
+const char* ssid = "Boneco Resusci"; // Nome do seu ponto de acesso
+
+// Declaração do servidor na porta 80
+WiFiServer server(80);
 
 // For debugging
 volatile bool statusLed = false;
@@ -36,19 +45,26 @@ int wifi_start(){
 		Serial.println(" msec");
 	}
 	#endif
+	
+	// Configurar a ESP8266 como ponto de acesso
+	WiFi.softAP(ssid);
 
 	return 0;
 }
 
 void send_wifi(){
-  static bool started = false;
+  // Verificar se há clientes
+  WiFiClient client = server.available();
+  if (client) {
 
-  if (!started)
-  {
-    started = true;
-    pinMode(BUILTIN_LED, OUTPUT);
+    // Responde à solicitação do cliente
+    client.println("HTTP/1.1 200 OK");
+    client.println("Content-Type: text/html");
+    client.println();
+    client.println(String(distance) + ";" + frequency);	// Estranho: porque ele converte a distância e a frequencia não?
+    client.println();
+    
+    // Fechar a conexão com o cliente
+    client.stop();
   }
-
-  digitalWrite(BUILTIN_LED, statusLed);  //Toggle LED Pin
-  statusLed = !statusLed;
 }
