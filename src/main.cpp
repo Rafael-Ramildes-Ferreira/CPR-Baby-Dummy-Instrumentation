@@ -27,13 +27,9 @@ void loop() {
   // double distance = filtered_read_sensor();
   double distance = 3.1416;
   calc_frequency(distance);
-  ESP.wdtFeed();
 
   Serial.print("Distância: ");
   Serial.println(distance);
-  // i++;
-  // if(i%5 == 0)
-  // Serial.println("Hello World!!");
   ESP.wdtFeed();
 }
 
