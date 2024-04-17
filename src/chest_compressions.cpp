@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <stdlib.h>
 #include "chest_compressions.h"
-#include "statistics.h"
+#include "utils.h"
 #include "main.h"
 
 // Peak and valley finder algorithm configuration
@@ -15,9 +15,9 @@
 ChestCompression::ChestCompression(){
 	dist_sensor = Adafruit_VL6180X();
 
-	if (!dist_sensor.begin()) {
-		error_handler();
-	}
+	// if (!dist_sensor.begin()) {
+	// 	error_handler();
+	// }
 }
 
 /**
@@ -77,8 +77,8 @@ double ChestCompression::last_peak(double distance){
 	index++;
 
 	// Gets time series features
-	double mean = calculate_mean(readings,BUFFER_SIZE);
-	double deviation = calculate_std_deviation(readings,mean,BUFFER_SIZE);
+	double mean = utils::calculate_mean(readings,BUFFER_SIZE);
+	double deviation = utils::calculate_std_deviation(readings,mean,BUFFER_SIZE);
   	Serial.print("Desvio: ");
   	Serial.println(deviation);
 
@@ -112,8 +112,8 @@ double ChestCompression::last_valley(double distance){
 	index++;
 
 	// Gets time series features
-	double mean = calculate_mean(readings,BUFFER_SIZE);
-	double deviation = calculate_std_deviation(readings,mean,BUFFER_SIZE);
+	double mean = utils::calculate_mean(readings,BUFFER_SIZE);
+	double deviation = utils::calculate_std_deviation(readings,mean,BUFFER_SIZE);
 
 	// Calculate a new last_valley if deviation is small
 	if(deviation > DEVIATION_THRESHOLD){

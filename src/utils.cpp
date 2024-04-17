@@ -1,6 +1,8 @@
 #include <cmath>
+#include "utils.h"
 
-double calculate_mean(const double array[],int size){
+
+double utils::calculate_mean(const double array[],int size){
 	double sum = 0.0;
     for(int i = 0;i < size; i++){
         sum += array[i];
@@ -9,7 +11,7 @@ double calculate_mean(const double array[],int size){
 	return sum/size;
 }
 
-double calculate_std_deviation(const double array[],double mean,int size) {
+double utils::calculate_std_deviation(const double array[],double mean,int size){
 	double sum = 0;
     for(int i = 0;i < size; i++){
 		sum = sum + (array[i] - mean)*(array[i] - mean);
