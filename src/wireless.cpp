@@ -14,13 +14,13 @@ WiFiServer WiFiCommunicator::server(80);
 WiFiCommunicator::WiFiCommunicator(ChestCompression *chest){
 	// Configures the periodically routine in which messages are sent
 	TimerInterruption::set_timer_interrupt(send_wifi);
-	
-	// Configurar a ESP8266 como ponto de acesso
-	WiFi.softAP(ssid);
 
 	// Informs the communicator which chest is been monitored
 	WiFiCommunicator::chest = chest;
 	this->ssid = "Boneco Resusci";
+	
+	// Configurar a ESP8266 como ponto de acesso
+	WiFi.softAP(this->ssid);
 }
 
 /**
