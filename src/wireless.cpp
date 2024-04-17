@@ -1,5 +1,4 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include "main.h"
 #include "buildconfig.h"
 #include "wireless.h"
@@ -15,31 +14,6 @@
 
 // Init ESP8266 timer 1
 ESP8266Timer ITimer;
-
-// Configuração do hotspot
-const char* ssid = "Boneco Resusci"; // Nome do seu ponto de acesso
-
-// Declaração do servidor na porta 80
-WiFiServer server(80);
-
-/* Private functions prototypes */
-static int set_timer_interrupt(void func(void));
-
-/**
- * @brief Starts the wifi communicator
- * @returns Status
- * 			0: No Error
- * 			-1: Error
-*/
-int wifi_start(){
-	// Configures the periodically routine in which messages are sent
-	set_timer_interrupt(send_wifi);
-	
-	// Configurar a ESP8266 como ponto de acesso
-	WiFi.softAP(ssid);
-
-	return 0;
-}
 
 /**
  * @brief Sets a periadical timer interrupt to send the wireless messages
@@ -66,19 +40,38 @@ static int set_timer_interrupt(void func(void)){
 	return 0; // No error
 }
 
+/* Starts static attributes */
+ChestCompression *WiFiCommunicator::chest = nullptr;
+WiFiServer WiFiCommunicator::server(80);
+
+/**
+ * @brief Starts the wifi communicator
+*/
+WiFiCommunicator::WiFiCommunicator(ChestCompression *chest){
+	// Configures the periodically routine in which messages are sent
+	set_timer_interrupt(send_wifi);
+	
+	// Configurar a ESP8266 como ponto de acesso
+	WiFi.softAP(ssid);
+
+	// Informs the communicator which chest is been monitored
+	WiFiCommunicator::chest = chest;
+	this->ssid = "Boneco Resusci";
+}
+
 /**
  * @brief Routine to send Wi-Fi messages of the operation status
 */
-void send_wifi(){
+void WiFiCommunicator::send_wifi(){
   // Verificar se há clientes
-  WiFiClient client = server.available();
+  WiFiClient client = WiFiCommunicator::server.accept();
   if (client) {
 
     // Responde à solicitação do cliente
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: text/html");
     client.println();
-    client.println(String(chest.get_distance()) + ";" + chest.get_frequency());	// Estranho: porque ele converte a distância e a frequencia não?
+    client.println(String(chest->get_distance()) + ";" + chest->get_frequency());	// Estranho: porque ele converte a distância e a frequencia não?
     client.println();
     
     // Fechar a conexão com o cliente
