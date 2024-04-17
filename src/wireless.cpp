@@ -22,14 +22,11 @@ const char* ssid = "Boneco Resusci"; // Nome do seu ponto de acesso
 // Declaração do servidor na porta 80
 WiFiServer server(80);
 
-// For debugging
-volatile bool statusLed = false;
-volatile uint32_t lastMillis = 0;
-
 /* Private functions prototypes */
 static int set_timer_interrupt(void func(void));
 
 /**
+ * @brief Starts the wifi communicator
  * @returns Status
  * 			0: No Error
  * 			-1: Error
