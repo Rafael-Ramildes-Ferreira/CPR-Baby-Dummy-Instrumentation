@@ -5,8 +5,11 @@
 #include "buildconfig.h"
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
+ChestCompression chest; // Temporary
+WiFiCommunicator communicator(&chest);
 
-double distance = 42, frequency = 42;
+double ChestCompression::get_distance(){return 42.0;}  // Temporary
+double ChestCompression::get_frequency(){return 0.42;} // Temporary
 
 void setup() {
   #ifdef DEBUG
@@ -17,8 +20,6 @@ void setup() {
   // if (!dist_sensor.begin()) {
   //   error_handler();
   // }
-
-  wifi_start();
 }
 
 void loop() {

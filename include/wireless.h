@@ -1,7 +1,22 @@
 #ifndef _WIRELESS_H
 #define _WIRELESS_H
 
-int wifi_start();
-void send_wifi();
+#include <ESP8266WebServer.h>
+#include "main.h" // Temporary
+// #include "ChestCompression.h"
+
+/**
+ * @brief Class to deal with setup and running of the periadical WiFi transmit
+ * routine
+*/
+class WiFiCommunicator{
+	public:
+		WiFiCommunicator(ChestCompression *chest);
+		static void send_wifi();
+		static ChestCompression *chest;
+	private:
+		const char* ssid; // Nome do seu ponto de acesso
+		static WiFiServer server;
+};
 
 #endif
