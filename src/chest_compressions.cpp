@@ -2,24 +2,72 @@
 #include <stdlib.h>
 #include "chest_compressions.h"
 #include "statistics.h"
+#include "main.h"
 
 // Peak and valley finder algorithm configuration
 #define BUFFER_SIZE 		10
 #define DEVIATION_THRESHOLD	5
 
-int calc_frequency(double distance){
-  double t0 = last_peak(distance);
-  double t1 = last_valley(distance);
-  
-  double period = 2*abs(t0 - t1);
 
-  return 1/period;
+/**
+ * @brief Chest compression constructor
+*/
+ChestCompression::ChestCompression(){
+	dist_sensor = Adafruit_VL6180X();
+
+	if (!dist_sensor.begin()) {
+		error_handler();
+	}
+}
+
+/**
+ * @brief Calculates a new value of this->distance based on sensor readings
+ * @returns The calculated distance
+*/
+double ChestCompression::calc_distance(){
+	// Filter values
+	static double yn = 0, yn1 = 0, yn2 = 0, xn = 0, xn1 = 0;
+
+	// Reads the sensor
+	uint8_t range = dist_sensor.readRange();
+	if (dist_sensor.readRangeStatus() == VL6180X_ERROR_NONE){
+		xn = range;
+	} else {
+		// xn = UINT8_MAX; // Used to be 200 (is that the maximum distance? [todo])
+		return yn; // Ignores failed reading
+	}
+
+	// Compute the filtered signal
+	yn = 1.656*yn1 - 0.6859*yn2 + 0.01568*xn + 0.01383*xn1;
+
+	// Updates values
+	// delay(1); // Why delay?
+	xn1 = xn;
+	yn2 = yn1;
+	yn1 = yn;
+
+	this->distance = yn/10.0;
+	return this->distance;
+}
+
+/**
+ * @brief Calculates a new value of this->frequency based on sensor readings
+ * @returns The calculated frequency
+*/
+double ChestCompression::calc_frequency(){
+	double t0 = this->last_peak(this->distance);
+	double t1 = this->last_valley(this->distance);
+
+	double period = 2*abs(t0 - t1);
+
+	this->frequency = 1/period;
+	return this->frequency;
 }
 
 /**
  * Se o peito estiver parado em cima, deve sempre considerar pico
 */
-double last_peak(double distance){
+double ChestCompression::last_peak(double distance){
 	static double readings[BUFFER_SIZE];
 	static int index = 0;
 	static double last_peak = millis();
@@ -54,7 +102,7 @@ double last_peak(double distance){
 	return last_peak;
 }
 
-double last_valley(double distance){
+double ChestCompression::last_valley(double distance){
 	static double readings[BUFFER_SIZE];
 	static int index = 0;
 	static double last_valley = millis();
