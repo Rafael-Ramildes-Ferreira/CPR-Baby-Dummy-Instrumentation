@@ -1,6 +1,8 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
+#include "buildconfig.h"
+
 /* Exported variable */
 class ChestCompression{
 	public:

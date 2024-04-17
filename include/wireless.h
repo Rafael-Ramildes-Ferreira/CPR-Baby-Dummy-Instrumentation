@@ -5,6 +5,10 @@
 #include "main.h" // Temporary
 // #include "ChestCompression.h"
 
+/**
+ * @brief Class to deal with setup and running of the periadical WiFi transmit
+ * routine
+*/
 class WiFiCommunicator{
 	public:
 		WiFiCommunicator(ChestCompression *chest);
