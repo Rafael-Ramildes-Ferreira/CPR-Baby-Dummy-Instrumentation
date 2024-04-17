@@ -1,13 +1,24 @@
-#include <Arduino.h>
+// #include <Arduino.h>
 #include <Adafruit_VL6180X.h>
 #include "main.h"
+#include "wireless.h"
+#include "buildconfig.h"
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
+double distance = 42, frequency = 42;
+
 void setup() {
-  if (!dist_sensor.begin()) {
-    error_handler();
-  }
+  #ifdef DEBUG
+  Serial.begin(115200);
+  Serial.println("");
+  #endif
+
+  // if (!dist_sensor.begin()) {
+  //   error_handler();
+  // }
+
+  wifi_start();
 }
 
 void loop() {
