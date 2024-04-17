@@ -6,7 +6,10 @@
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 
-double distance = 42, frequency = 42;
+ChestCompression chest; // Temporary
+
+double ChestCompression::get_distance(){return 42.0;}  // Temporary
+double ChestCompression::get_frequency(){return 0.42;} // Temporary
 
 void setup() {
   #ifdef DEBUG
