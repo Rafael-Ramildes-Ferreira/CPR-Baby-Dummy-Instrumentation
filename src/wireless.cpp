@@ -35,7 +35,7 @@ void WiFiCommunicator::send_wifi(){
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: text/html");
     client.println();
-    client.println(String(chest->get_distance()) + ";" + chest->get_frequency());	// Estranho: porque ele converte a distância e a frequencia não?
+    client.println(String(WiFiCommunicator::chest->get_distance()) + ";" + WiFiCommunicator::chest->get_frequency());
     client.println();
     
     // Fechar a conexão com o cliente

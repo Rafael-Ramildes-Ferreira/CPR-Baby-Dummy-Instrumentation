@@ -2,8 +2,7 @@
 #define _WIRELESS_H
 
 #include <ESP8266WebServer.h>
-#include "main.h" // Temporary
-// #include "ChestCompression.h"
+#include "chest_compressions.h"
 
 /**
  * @brief Class to deal with setup and running of the periadical WiFi transmit
