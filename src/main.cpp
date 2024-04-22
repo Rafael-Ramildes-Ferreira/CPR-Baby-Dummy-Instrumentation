@@ -8,6 +8,9 @@
 
 ChestCompression chest;
 
+// Debug
+int i = 0;
+
 
 void setup() {
   ESP.wdtDisable();//Desabilita o SW WDT. 
@@ -20,15 +23,18 @@ void setup() {
 }
 
 void loop() {
-  // double distance = chest.filtered_read_sensor();
-  double distance = 3.1416;
+  double distance = chest.calc_distance();
   double frequency = chest.calc_frequency();
 
+  if(i%100 == 0){
   Serial.print("Distância: ");
   Serial.println(distance);
   Serial.print("Freqüência: ");
   Serial.println(frequency);
+  }
   ESP.wdtFeed();
+
+  i++;
 }
 
 

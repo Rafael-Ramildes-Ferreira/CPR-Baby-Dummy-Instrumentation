@@ -6,7 +6,7 @@
 
 // Peak and valley finder algorithm configuration
 #define BUFFER_SIZE 		10
-#define DEVIATION_THRESHOLD	5
+#define DEVIATION_THRESHOLD	0.05
 
 
 /**
@@ -15,9 +15,9 @@
 ChestCompression::ChestCompression(){
 	dist_sensor = Adafruit_VL6180X();
 
-	// if (!dist_sensor.begin()) {
-	// 	error_handler();
-	// }
+	if (!dist_sensor.begin()) {
+		error_handler();
+	}
 }
 
 /**
