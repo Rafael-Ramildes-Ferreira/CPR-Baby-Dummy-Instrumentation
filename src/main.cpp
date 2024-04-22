@@ -3,10 +3,14 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "main.h"
+#include "wireless.h"
+#include "buildconfig.h"
 #include "chest_compressions.h"
 
 
-ChestCompression chest;
+Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
+ChestCompression chest; // Temporary
+WiFiCommunicator communicator(&chest);
 
 // Debug
 int i = 0;
