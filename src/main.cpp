@@ -1,29 +1,44 @@
-// #include <Arduino.h>
-#include <Adafruit_VL6180X.h>
+#include <Arduino.h>
+#include <Adafruit_I2CDevice.h>
+#include <Wire.h>
+#include <SPI.h>
 #include "main.h"
 #include "wireless.h"
 #include "buildconfig.h"
+#include "chest_compressions.h"
+
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 ChestCompression chest; // Temporary
 WiFiCommunicator communicator(&chest);
 
-double ChestCompression::get_distance(){return 42.0;}  // Temporary
-double ChestCompression::get_frequency(){return 0.42;} // Temporary
+// Debug
+int i = 0;
+
 
 void setup() {
-  #ifdef DEBUG
-  Serial.begin(115200);
-  Serial.println("");
-  #endif
+  ESP.wdtDisable();//Desabilita o SW WDT. 
 
-  // if (!dist_sensor.begin()) {
-  //   error_handler();
-  // }
+  Serial.begin(115200);
+  delay(1);
+  Serial.println("Começando");
+
+  ESP.wdtFeed();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  double distance = chest.calc_distance();
+  double frequency = chest.calc_frequency();
+
+  if(i%100 == 0){
+  Serial.print("Distância: ");
+  Serial.println(distance);
+  Serial.print("Freqüência: ");
+  Serial.println(frequency);
+  }
+  ESP.wdtFeed();
+
+  i++;
 }
 
 
@@ -32,6 +47,7 @@ void error_handler(){
   {
     /* Does nothing */
     /* It could blink a led or something, but the watch dog will probably restart it*/
+    Serial.println("ERROR!!!");
   }
   
 }
