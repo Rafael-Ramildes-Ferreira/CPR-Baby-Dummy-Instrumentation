@@ -17,13 +17,9 @@ int i = 0;
 
 
 void setup() {
-  ESP.wdtDisable();//Desabilita o SW WDT. 
-
   Serial.begin(115200);
   delay(1);
   Serial.println("Começando");
-
-  ESP.wdtFeed();
 }
 
 void loop() {
@@ -36,7 +32,6 @@ void loop() {
   Serial.print("Freqüência: ");
   Serial.println(frequency);
   }
-  ESP.wdtFeed();
 
   i++;
 }
