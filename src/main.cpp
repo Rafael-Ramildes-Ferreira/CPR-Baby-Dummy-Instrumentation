@@ -10,13 +10,16 @@
 
 Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 ChestCompression chest; // Temporary
-WiFiCommunicator communicator(&chest);
+WiFiCommunicator communicator;
 
 // Debug
 int i = 0;
 
 
 void setup() {
+  communicator.begin(&chest);
+  
+  
   Serial.begin(115200);
   delay(1);
   Serial.println("Começando");

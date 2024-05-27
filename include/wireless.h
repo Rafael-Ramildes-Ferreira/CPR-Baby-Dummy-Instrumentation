@@ -11,16 +11,16 @@
 */
 class WiFiCommunicator{
 	public:
-		WiFiCommunicator(ChestCompression *chest);
-		static ChestCompression *chest;
+		static int begin(ChestCompression *chest);
 		
 		// ISR: Interrupt Service Routine
 		static void send_wifi(void);
 
 	private:
+		static ChestCompression *chest;
 		static const char* ssid; // Nome do seu ponto de acesso
-		static TimerInterruption timer_it; // = TimerInterruption(TIMER_0);
-		static WiFiServer server; // = WiFiServer(80);
+		static TimerInterruption timer_it;
+		static WiFiServer server;
 };
 
 #endif

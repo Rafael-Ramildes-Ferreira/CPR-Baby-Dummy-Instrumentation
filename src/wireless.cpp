@@ -12,7 +12,7 @@ const char*	WiFiCommunicator::ssid = "Boneco Resusci";
 /**
  * @brief Starts the wifi communicator
 */
-WiFiCommunicator::WiFiCommunicator(ChestCompression *chest){
+int WiFiCommunicator::begin(ChestCompression *chest){
 	// // Informs the communicator which chest is been monitored
 	WiFiCommunicator::chest = chest;
 	
@@ -22,12 +22,16 @@ WiFiCommunicator::WiFiCommunicator(ChestCompression *chest){
 
 	// Configures the periodically routine in which messages are sent
 	WiFiCommunicator::timer_it.set_timer_interrupt(&WiFiCommunicator::send_wifi);
+
+  return 0;
 }
 
 /**
  * @brief Routine to send Wi-Fi messages of the operation status
 */
 void WiFiCommunicator::send_wifi(){
+  assert(WiFiCommunicator::chest != nullptr);
+  
   // Verificar se há clientes
   WiFiClient client = WiFiCommunicator::server.accept();
   if (client) {
