@@ -1,8 +1,9 @@
 #ifndef _WIRELESS_H
 #define _WIRELESS_H
 
-#include <ESP8266WebServer.h>
+// #include <ESP8266WebServer.h>
 #include "chest_compressions.h"
+#include "timerinterruption.h"
 
 /**
  * @brief Class to deal with setup and running of the periadical WiFi transmit
@@ -15,7 +16,8 @@ class WiFiCommunicator{
 		static ChestCompression *chest;
 	private:
 		const char* ssid; // Nome do seu ponto de acesso
-		static WiFiServer server;
+		TimerInterruption timer_it = TimerInterruption(TIMER_0);
+		// static WiFiServer server;
 };
 
 #endif
