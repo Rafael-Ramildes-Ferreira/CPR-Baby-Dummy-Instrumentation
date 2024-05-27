@@ -6,28 +6,32 @@
 #include "wireless.h"
 #include "buildconfig.h"
 #include "chest_compressions.h"
+#include "soc/rtc_wdt.h"
 
 
-Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
-ChestCompression chest; // Temporary
-WiFiCommunicator communicator;
+// Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
+// WiFiCommunicator communicator;
+ChestCompression *chest = nullptr; // Temporary
 
 // Debug
 int i = 0;
 
 
 void setup() {
-  communicator.begin(&chest);
-  
-  
+  rtc_wdt_feed();
   Serial.begin(115200);
   delay(1);
   Serial.println("Começando");
+
+  chest = new ChestCompression(); // Temporary
+
+  // communicator.begin(&chest);
 }
 
 void loop() {
-  double distance = chest.calc_distance();
-  double frequency = chest.calc_frequency();
+  rtc_wdt_feed();
+  double distance = chest->calc_distance();
+  double frequency = chest->calc_frequency();
 
   if(i%100 == 0){
   Serial.print("Distância: ");

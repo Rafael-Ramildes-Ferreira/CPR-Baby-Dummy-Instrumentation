@@ -13,9 +13,9 @@
  * @brief Chest compression constructor
 */
 ChestCompression::ChestCompression(){
-	dist_sensor = Adafruit_VL6180X();
+	this->dist_sensor = Adafruit_VL6180X();
 
-	if (!dist_sensor.begin()) {
+	if (!this->dist_sensor.begin()) {
 		error_handler();
 	}
 }
@@ -79,8 +79,6 @@ double ChestCompression::last_peak(double distance){
 	// Gets time series features
 	double mean = utils::calculate_mean(readings,BUFFER_SIZE);
 	double deviation = utils::calculate_std_deviation(readings,mean,BUFFER_SIZE);
-  	Serial.print("Desvio: ");
-  	Serial.println(deviation);
 
 	// Calculate a new last_peak if deviation is small
 	if(deviation > DEVIATION_THRESHOLD){
@@ -95,7 +93,6 @@ double ChestCompression::last_peak(double distance){
 
 		if(is_bigger){
 			last_peak = millis();
-			Serial.println("Pico!!  <----");
 		} 
 	}
 
@@ -128,7 +125,6 @@ double ChestCompression::last_valley(double distance){
 
 		if(is_smaller){
 			last_valley = millis();
-			Serial.println("Vale!!  <----");
 		} 
 	}
 
