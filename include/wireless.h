@@ -1,7 +1,7 @@
 #ifndef _WIRELESS_H
 #define _WIRELESS_H
 
-// #include <ESP8266WebServer.h>
+#include <WiFi.h>
 #include "chest_compressions.h"
 #include "timerinterruption.h"
 
@@ -12,12 +12,15 @@
 class WiFiCommunicator{
 	public:
 		WiFiCommunicator(ChestCompression *chest);
-		static void send_wifi();
 		static ChestCompression *chest;
+		
+		// ISR: Interrupt Service Routine
+		static void send_wifi(void);
+
 	private:
-		const char* ssid; // Nome do seu ponto de acesso
-		TimerInterruption timer_it = TimerInterruption(TIMER_0);
-		// static WiFiServer server;
+		static const char* ssid; // Nome do seu ponto de acesso
+		static TimerInterruption timer_it; // = TimerInterruption(TIMER_0);
+		static WiFiServer server; // = WiFiServer(80);
 };
 
 #endif
