@@ -10,7 +10,7 @@
 
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
-// WiFiCommunicator communicator;
+WiFiCommunicator *communicator;
 ChestCompression *chest = nullptr; // Temporary
 
 // Debug
@@ -25,7 +25,8 @@ void setup() {
 
   chest = new ChestCompression(); // Temporary
 
-  // communicator.begin(&chest);
+  communicator = new WiFiCommunicator();
+  communicator->begin(chest);
 }
 
 void loop() {
