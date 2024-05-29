@@ -1,3 +1,13 @@
+/**
+ * ATTENTION: YOU NEED TO CHEAT!!!
+ * You may need to coment out the lines:
+ * 
+ * 69:  if (read8(VL6180X_REG_IDENTIFICATION_MODEL_ID) != 0xB4) {
+ * 70:    return false;
+ * 71:  }
+ * 
+ * from .pio\libdeps\nodemcu-32s\Adafruit_VL6180X\Adafruit_VL6180X.cpp
+*/
 #include <Arduino.h>
 #include <Adafruit_I2CDevice.h>
 #include <Wire.h>
@@ -56,7 +66,7 @@ void error_handler(){
   {
     /* Does nothing */
     /* It could blink a led or something, but the watch dog will probably restart it*/
-    // Serial.println("ERROR!!!");
+    Serial.println("ERROR!!!");
   }
   
 }
