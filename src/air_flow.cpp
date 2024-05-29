@@ -2,12 +2,14 @@
 
 int AirFlow::begin()
 {
-	flowSensor.begin();
+	// flowSensor = new SFM3X00(SFM_ADDR);
+	// flowSensor->begin();
 
 	return 0;
 }
 
 double AirFlow::get_flow()
 {
-	return flowSensor.readFlow();
+	// return flowSensor->readFlow();
+	return 0.0;
 }

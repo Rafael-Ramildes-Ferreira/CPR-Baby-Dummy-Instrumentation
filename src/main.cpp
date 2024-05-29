@@ -4,6 +4,7 @@
 #include <SPI.h>
 #include "main.h"
 #include "wireless.h"
+#include "air_flow.h"
 #include "buildconfig.h"
 #include "chest_compressions.h"
 #include "soc/rtc_wdt.h"
@@ -12,6 +13,7 @@
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 WiFiCommunicator *communicator;
 ChestCompression *chest = nullptr; // Temporary
+AirFlow air_flow;
 
 // Debug
 int i = 0;
@@ -26,19 +28,23 @@ void setup() {
   chest = new ChestCompression(); // Temporary
 
   communicator = new WiFiCommunicator();
-  communicator->begin(chest);
+  air_flow.begin();
+  communicator->begin(chest,&air_flow);
 }
 
 void loop() {
   rtc_wdt_feed();
   double distance = chest->calc_distance();
   double frequency = chest->calc_frequency();
+  // double air = air_flow.get_flow();
 
   if(i%100 == 0){
   Serial.print("Distância: ");
   Serial.println(distance);
   Serial.print("Freqüência: ");
   Serial.println(frequency);
+  // Serial.print("Fluxo de ar: ");
+  // Serial.println(air);
   }
 
   i++;
@@ -50,7 +56,7 @@ void error_handler(){
   {
     /* Does nothing */
     /* It could blink a led or something, but the watch dog will probably restart it*/
-    Serial.println("ERROR!!!");
+    // Serial.println("ERROR!!!");
   }
   
 }
