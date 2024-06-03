@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "chest_compressions.h"
 #include "utils.h"
 #include "main.h"
@@ -19,7 +18,6 @@ ChestCompression::ChestCompression(){
 	if (!this->dist_sensor.begin()) {
 		error_handler();
 	}
-	// this->dist_sensor.setAddress(VL6180X_ADDR);
 }
 
 /**

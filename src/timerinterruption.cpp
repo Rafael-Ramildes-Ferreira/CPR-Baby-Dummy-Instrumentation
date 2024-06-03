@@ -19,19 +19,19 @@ TimerInterruption::TimerInterruption(uint8_t timer_instance){
  * 			-1: Error
 */
 int TimerInterruption::set_timer_interrupt(void func(void)){
-	// if(!TimerInterruption::ITimer.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, func)){
-	// 	#ifdef DEBUG
-	// 		Serial.println("ERROR: Periodical Wireless transmition failed");
-	// 	#endif
-	// 	return -1; 
-	// }
-	// #ifdef DEBUG
-	// else {
-	// 	Serial.print("Communication timer configured to ");
-	// 	Serial.print(TIMER_INTERVAL_MS);
-	// 	Serial.println(" msec");
-	// }
-	// #endif
+	if(!TimerInterruption::ITimer.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, func)){
+		#ifdef DEBUG
+			Serial.println("ERROR: Periodical Wireless transmition failed");
+		#endif
+		return -1; 
+	}
+	#ifdef DEBUG
+	else {
+		Serial.print("Communication timer configured to ");
+		Serial.print(TIMER_INTERVAL_MS);
+		Serial.println(" msec");
+	}
+	#endif
 	
     timerAttachInterrupt(this->timer_cfg, func, true);
     timerAlarmEnable(this->timer_cfg);

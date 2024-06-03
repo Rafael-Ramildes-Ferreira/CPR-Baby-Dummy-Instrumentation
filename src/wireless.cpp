@@ -47,11 +47,13 @@ void WiFiCommunicator::send_wifi(){
                   + ";" + WiFiCommunicator::chest->get_frequency() \
                   // + ";" + WiFiCommunicator::air_flow->get_flow()
                   );
+#ifdef DEBUG
     Serial.println(
                   String(WiFiCommunicator::chest->get_distance()) \
                   + ";" + WiFiCommunicator::chest->get_frequency() \
                   // + ";" + WiFiCommunicator::air_flow->get_flow()
                   );
+#endif
     client.println();
     
     // Fechar a conexão com o cliente

@@ -8,13 +8,10 @@
  * 
  * from .pio\libdeps\nodemcu-32s\Adafruit_VL6180X\Adafruit_VL6180X.cpp
 */
-#include <Adafruit_I2CDevice.h>
-#include <Wire.h>
-#include <SPI.h>
+#include "buildconfig.h"
 #include "main.h"
 #include "wireless.h"
 #include "air_flow.h"
-#include "buildconfig.h"
 #include "chest_compressions.h"
 #include "soc/rtc_wdt.h"
 
