@@ -11,5 +11,4 @@ int AirFlow::begin()
 double AirFlow::get_flow()
 {
 	return flowSensor->readFlow();
-	// return 0.0;
 }

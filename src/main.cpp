@@ -36,10 +36,16 @@ void setup() {
   Serial.println("Começando");
 
   chest = new ChestCompression(); // Temporary
+  Serial.println("new ChestCompression();");
 
   communicator = new WiFiCommunicator();
+  Serial.println("new WiFiCommunicator();");
+
   air_flow.begin();
+  Serial.println("air_flow.begin();");
+  
   communicator->begin(chest,&air_flow);
+  Serial.println("communicator->begin(chest,&air_flow);");
 }
 
 void loop() {
