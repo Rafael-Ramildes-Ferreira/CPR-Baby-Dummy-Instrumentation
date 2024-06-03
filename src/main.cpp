@@ -46,15 +46,15 @@ void loop() {
   rtc_wdt_feed();
   double distance = chest->calc_distance();
   double frequency = chest->calc_frequency();
-  // double air = air_flow.get_flow();
+  double air = air_flow.get_flow();
 
   if(i%100 == 0){
   Serial.print("Distância: ");
   Serial.println(distance);
   Serial.print("Freqüência: ");
   Serial.println(frequency);
-  // Serial.print("Fluxo de ar: ");
-  // Serial.println(air);
+  Serial.print("Fluxo de ar: ");
+  Serial.println(air);
   }
 
   i++;

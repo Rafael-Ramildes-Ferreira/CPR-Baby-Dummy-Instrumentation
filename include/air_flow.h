@@ -12,7 +12,7 @@
 class AirFlow
 {
 	private:
-		// SFM3X00 *flowSensor;
+		SFM3X00 *flowSensor;
 	public:
 		int begin();
 		double get_flow();
