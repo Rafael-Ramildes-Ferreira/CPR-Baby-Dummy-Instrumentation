@@ -8,16 +8,19 @@
 #define BUFFER_SIZE 		10
 #define DEVIATION_THRESHOLD	0.05
 
+#define VL6180X_ADDR 0x29
+
 
 /**
  * @brief Chest compression constructor
 */
 ChestCompression::ChestCompression(){
-	this->dist_sensor = Adafruit_VL6180X();
+	this->dist_sensor = Adafruit_VL6180X(VL6180X_ADDR);
 
 	if (!this->dist_sensor.begin()) {
 		error_handler();
 	}
+	// this->dist_sensor.setAddress(VL6180X_ADDR);
 }
 
 /**
