@@ -8,7 +8,6 @@
  * 
  * from .pio\libdeps\nodemcu-32s\Adafruit_VL6180X\Adafruit_VL6180X.cpp
 */
-#include <Arduino.h>
 #include <Adafruit_I2CDevice.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -25,31 +24,48 @@ WiFiCommunicator *communicator;
 ChestCompression *chest = nullptr; // Temporary
 AirFlow air_flow;
 
+#ifdef DEBUG
 // Debug
 int i = 0;
+#endif
 
 
 void setup() {
   rtc_wdt_feed();
-  Serial.begin(115200);
-  delay(1);
-  Serial.println("Começando");
 
+#ifdef DEBUG
+  Serial.begin(115200);
+#endif
+
+  delay(1);
+
+#ifdef DEBUG
+  Serial.println("Começando");
+#endif
   chest = new ChestCompression(); // Temporary
+#ifdef DEBUG
   Serial.println("new ChestCompression();");
+#endif
 
   communicator = new WiFiCommunicator();
+#ifdef DEBUG
   Serial.println("new WiFiCommunicator();");
+#endif
 
   air_flow.begin();
+#ifdef DEBUG
   Serial.println("air_flow.begin();");
+#endif
   
   communicator->begin(chest,&air_flow);
+#ifdef DEBUG
   Serial.println("communicator->begin(chest,&air_flow);");
+#endif
 }
 
 void loop() {
   rtc_wdt_feed();
+#ifdef DEBUG
   double distance = chest->calc_distance();
   double frequency = chest->calc_frequency();
   double air = air_flow.get_flow();
@@ -61,9 +77,11 @@ void loop() {
   Serial.println(frequency);
   Serial.print("Fluxo de ar: ");
   Serial.println(air);
+  Serial.println("--------------------------");
   }
 
   i++;
+#endif
 }
 
 

@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <stdlib.h>
 #include "chest_compressions.h"
 #include "utils.h"
@@ -30,7 +29,6 @@ ChestCompression::ChestCompression(){
 double ChestCompression::calc_distance(){
 	// Filter values
 	static double yn = 0, yn1 = 0, yn2 = 0, xn = 0, xn1 = 0;
-
 	// Reads the sensor
 	uint8_t range = dist_sensor.readRange();
 	if (dist_sensor.readRangeStatus() == VL6180X_ERROR_NONE){
@@ -42,6 +40,7 @@ double ChestCompression::calc_distance(){
 
 	// Compute the filtered signal
 	yn = 1.656*yn1 - 0.6859*yn2 + 0.01568*xn + 0.01383*xn1;
+
 
 	// Updates values
 	// delay(1); // Why delay?
