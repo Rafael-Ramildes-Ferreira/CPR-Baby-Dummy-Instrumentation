@@ -1,6 +1,8 @@
 #include "main.h"
 #include "wireless.h"
 
+void send_wifi();
+
 
 /* Starts static attributes */
 ChestCompression *WiFiCommunicator::chest = nullptr;
@@ -19,10 +21,10 @@ int WiFiCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 	
 	// Configurar a ESP32 como ponto de acesso
 	WiFi.softAP(WiFiCommunicator::ssid);
-  WiFiCommunicator::server.begin();
+  // WiFiCommunicator::server.begin();
 
 	// Configures the periodically routine in which messages are sent
-	WiFiCommunicator::timer_it.set_timer_interrupt(&WiFiCommunicator::send_wifi);
+	WiFiCommunicator::timer_it.set_timer_interrupt(&send_wifi);
 
   return 0;
 }
@@ -30,9 +32,9 @@ int WiFiCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 /**
  * @brief Routine to send Wi-Fi messages of the operation status
 */
-void WiFiCommunicator::send_wifi(){
-  assert(WiFiCommunicator::chest != nullptr);
-  assert(WiFiCommunicator::air_flow != nullptr);
+void send_wifi(){
+  // assert(WiFiCommunicator::chest != nullptr);
+  // assert(WiFiCommunicator::air_flow != nullptr);
   
   // Verificar se há clientes
   WiFiClient client = WiFiCommunicator::server.accept();
@@ -42,17 +44,18 @@ void WiFiCommunicator::send_wifi(){
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: text/html");
     client.println();
-    client.println(
-                  String(WiFiCommunicator::chest->get_distance()) \
-                  + ";" + WiFiCommunicator::chest->get_frequency() \
-                  // + ";" + WiFiCommunicator::air_flow->get_flow()
-                  );
+    // client.println(
+    //               String(WiFiCommunicator::chest->get_distance()) \
+    //               + ";" + WiFiCommunicator::chest->get_frequency() \
+    //               // + ";" + WiFiCommunicator::air_flow->get_flow()
+    //               );
 #ifdef DEBUG
-    Serial.println(
-                  String(WiFiCommunicator::chest->get_distance()) \
-                  + ";" + WiFiCommunicator::chest->get_frequency() \
-                  // + ";" + WiFiCommunicator::air_flow->get_flow()
-                  );
+    // Serial.println(
+    //               String(WiFiCommunicator::chest->get_distance()) \
+    //               + ";" + WiFiCommunicator::chest->get_frequency() \
+    //               // + ";" + WiFiCommunicator::air_flow->get_flow()
+    //               );
+    Serial.println("Interrupção!!");
 #endif
     client.println();
     

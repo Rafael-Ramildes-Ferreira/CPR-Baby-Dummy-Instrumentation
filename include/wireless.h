@@ -15,9 +15,9 @@ class WiFiCommunicator{
 		static int begin(ChestCompression *chest, AirFlow *airflow);
 		
 		// ISR: Interrupt Service Routine
-		static void send_wifi(void);
+		// static void send_wifi(void);
 
-	private:
+	// private:
 		static ChestCompression *chest;
 		static AirFlow *air_flow;
 		static const char* ssid; // Nome do seu ponto de acesso

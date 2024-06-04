@@ -30,6 +30,17 @@
  * @}
 */
 
+/**
+ * @defgroup TIMER_INTERRUPT_EDGE
+ * @brief	Holds parameters used to configure a timer interrupt
+ * @{
+*/
+#define EDGE	(true)
+#define FLAT	(false)
+/**
+ * @}
+*/
+
 
 /**
  * @defgroup TIMER_INTERRUPT_SETTINGS
@@ -41,6 +52,17 @@
 #define TIMER_INTERVAL_S	((float) TIMER_INTERVAL_MS*1e-3)
 #define PRELOAD				(1000)
 #define PRESCALOR			((uint16_t)(TIMER_INTERVAL_S*TIMER_FREQUENCY/PRELOAD))
+/**
+ * @}
+*/
+
+/**
+ * @defgroup TIMER_CONFIGS
+ * @brief	Overall configuration defines
+ * @{
+*/
+#define AUTO_RELOAD		(true)
+#define MANUAL_RELOAD	(false)
 /**
  * @}
 */

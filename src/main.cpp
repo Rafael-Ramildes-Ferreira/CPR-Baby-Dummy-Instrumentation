@@ -39,7 +39,7 @@ void setup() {
 #ifdef DEBUG
   Serial.println("Começando");
 #endif
-  chest = new ChestCompression(); // Temporary
+  // chest = new ChestCompression(); // Temporary
 #ifdef DEBUG
   Serial.println("new ChestCompression();");
 #endif
@@ -49,12 +49,13 @@ void setup() {
   Serial.println("new WiFiCommunicator();");
 #endif
 
-  air_flow.begin();
+  // air_flow.begin();
 #ifdef DEBUG
   Serial.println("air_flow.begin();");
 #endif
   
-  communicator->begin(chest,&air_flow);
+  communicator->begin(nullptr,nullptr);
+  // communicator->begin(chest,&air_flow);
 #ifdef DEBUG
   Serial.println("communicator->begin(chest,&air_flow);");
 #endif
