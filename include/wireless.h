@@ -13,11 +13,13 @@
 class WiFiCommunicator{
 	public:
 		static int begin(ChestCompression *chest, AirFlow *airflow);
+		static void send_wifi(void);
 		
 		// ISR: Interrupt Service Routine
-		// static void send_wifi(void);
+		static void ISR(void);
+		static volatile bool request_to_send;
 
-	// private:
+	private:
 		static ChestCompression *chest;
 		static AirFlow *air_flow;
 		static const char* ssid; // Nome do seu ponto de acesso

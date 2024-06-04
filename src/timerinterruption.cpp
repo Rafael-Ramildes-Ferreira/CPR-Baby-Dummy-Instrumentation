@@ -32,15 +32,15 @@ int TimerInterruption::set_timer_interrupt(void func(void)){
 	// 	Serial.println(" msec");
 	// }
 	// #endif
-	timerAttachInterrupt(this->timer_cfg, func,EDGE);
+	timerAttachInterrupt(this->timer_cfg, func, EDGE);
 	timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
 	timerAlarmEnable(this->timer_cfg);
 	#ifdef DEBUG
 	Serial.println("Interrupt configured");
 	#endif
 	
-    timerAttachInterrupt(this->timer_cfg, func, true);
-    timerAlarmEnable(this->timer_cfg);
+    // timerAttachInterrupt(this->timer_cfg, func, true);
+    // timerAlarmEnable(this->timer_cfg);
 
 	return 0; // No error
 }

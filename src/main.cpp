@@ -64,22 +64,26 @@ void setup() {
 void loop() {
   rtc_wdt_feed();
 #ifdef DEBUG
-  double distance = chest->calc_distance();
-  double frequency = chest->calc_frequency();
-  double air = air_flow.get_flow();
+  // double distance = chest->calc_distance();
+  // double frequency = chest->calc_frequency();
+  // double air = air_flow.get_flow();
 
-  if(i%100 == 0){
-  Serial.print("Distância: ");
-  Serial.println(distance);
-  Serial.print("Freqüência: ");
-  Serial.println(frequency);
-  Serial.print("Fluxo de ar: ");
-  Serial.println(air);
-  Serial.println("--------------------------");
-  }
+  // if(i%100 == 0){
+  // Serial.print("Distância: ");
+  // Serial.println(distance);
+  // Serial.print("Freqüência: ");
+  // Serial.println(frequency);
+  // Serial.print("Fluxo de ar: ");
+  // Serial.println(air);
+  // Serial.println("--------------------------");
+  // }
 
-  i++;
+  // i++;
 #endif
+  if(communicator->request_to_send)
+  {
+    communicator->send_wifi();
+  }
 }
 
 
