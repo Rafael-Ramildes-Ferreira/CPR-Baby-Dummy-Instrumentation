@@ -8,7 +8,7 @@
 */
 TimerInterruption::TimerInterruption(uint8_t timer_instance){
     this->timer_cfg = timerBegin(TIMER_0, PRESCALOR, COUNT_UP);
-    timerAlarmWrite(this->timer_cfg, PRELOAD, true);
+    timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
 }
 
 /**
@@ -33,7 +33,7 @@ int TimerInterruption::set_timer_interrupt(void func(void)){
 	// }
 	// #endif
 	timerAttachInterrupt(this->timer_cfg, func, EDGE);
-	timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
+	// timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
 	timerAlarmEnable(this->timer_cfg);
 	#ifdef DEBUG
 	Serial.println("Interrupt configured");

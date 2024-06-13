@@ -39,7 +39,7 @@ void setup() {
 #ifdef DEBUG
   Serial.println("Começando");
 #endif
-  // chest = new ChestCompression(); // Temporary
+  chest = new ChestCompression(); // Temporary
 #ifdef DEBUG
   Serial.println("new ChestCompression();");
 #endif
@@ -49,13 +49,13 @@ void setup() {
   Serial.println("new WiFiCommunicator();");
 #endif
 
-  // air_flow.begin();
+  air_flow.begin();
 #ifdef DEBUG
   Serial.println("air_flow.begin();");
 #endif
   
-  communicator->begin(nullptr,nullptr);
-  // communicator->begin(chest,&air_flow);
+  // communicator->begin(nullptr,nullptr);
+  communicator->begin(chest,&air_flow);
 #ifdef DEBUG
   Serial.println("communicator->begin(chest,&air_flow);");
 #endif
@@ -63,25 +63,10 @@ void setup() {
 
 void loop() {
   rtc_wdt_feed();
-#ifdef DEBUG
-  // double distance = chest->calc_distance();
-  // double frequency = chest->calc_frequency();
-  // double air = air_flow.get_flow();
-
-  // if(i%100 == 0){
-  // Serial.print("Distância: ");
-  // Serial.println(distance);
-  // Serial.print("Freqüência: ");
-  // Serial.println(frequency);
-  // Serial.print("Fluxo de ar: ");
-  // Serial.println(air);
-  // Serial.println("--------------------------");
-  // }
-
-  // i++;
-#endif
-  if(communicator->request_to_send)
+  
+  if(request_to_send)
   {
+    Serial.println("Era true!!");
     communicator->send_wifi();
   }
 }
