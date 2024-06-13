@@ -66,7 +66,6 @@ void loop() {
   
   if(request_to_send)
   {
-    Serial.println("Era true!!");
     communicator->send_wifi();
   }
 }
