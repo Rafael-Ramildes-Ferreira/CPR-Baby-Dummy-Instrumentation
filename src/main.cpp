@@ -54,6 +54,7 @@ void setup() {
   Serial.println("air_flow.begin();");
 #endif
   
+  // communicator->begin(nullptr,nullptr);
   communicator->begin(chest,&air_flow);
 #ifdef DEBUG
   Serial.println("communicator->begin(chest,&air_flow);");
@@ -62,23 +63,11 @@ void setup() {
 
 void loop() {
   rtc_wdt_feed();
-#ifdef DEBUG
-  double distance = chest->calc_distance();
-  double frequency = chest->calc_frequency();
-  double air = air_flow.get_flow();
-
-  if(i%100 == 0){
-  Serial.print("Distância: ");
-  Serial.println(distance);
-  Serial.print("Freqüência: ");
-  Serial.println(frequency);
-  Serial.print("Fluxo de ar: ");
-  Serial.println(air);
-  Serial.println("--------------------------");
+  
+  if(request_to_send)
+  {
+    communicator->send_wifi();
   }
-
-  i++;
-#endif
 }
 
 
