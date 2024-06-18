@@ -136,9 +136,11 @@ double ChestCompression::last_valley(double distance){
 
 
 double ChestCompression::get_distance(){
+	this->calc_distance();
 	return this->distance;
 }
 
 double ChestCompression::get_frequency(){
+	this->calc_frequency();
 	return this->frequency;
 }
