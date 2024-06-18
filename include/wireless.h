@@ -7,7 +7,7 @@
 #include "air_flow.h"
 
 
-extern volatile bool request_to_send;
+// extern volatile bool request_to_send;
 
 /**
  * @brief Class to deal with setup and running of the periadical WiFi transmit
@@ -20,7 +20,7 @@ class WiFiCommunicator{
 		
 		// ISR: Interrupt Service Routine
 		static void ISR(void);
-		// static volatile bool request_to_send;
+		static volatile bool request_to_send;
 
 	private:
 		static ChestCompression *chest;

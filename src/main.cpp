@@ -64,7 +64,7 @@ void setup() {
 void loop() {
   rtc_wdt_feed();
   
-  if(request_to_send)
+  if(communicator->request_to_send)
   {
     communicator->send_wifi();
   }

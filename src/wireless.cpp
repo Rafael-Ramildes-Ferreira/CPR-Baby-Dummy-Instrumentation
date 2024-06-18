@@ -2,7 +2,7 @@
 #include "wireless.h"
 
 
-volatile bool request_to_send = false;
+// volatile bool request_to_send = false;
 
 /* Starts static attributes */
 ChestCompression *WiFiCommunicator::chest = nullptr;
@@ -10,7 +10,7 @@ AirFlow *WiFiCommunicator::air_flow = nullptr;
 TimerInterruption WiFiCommunicator::timer_it(TIMER_0);
 WiFiServer WiFiCommunicator::server(80);
 const char*	WiFiCommunicator::ssid = "Boneco Resusci";
-// volatile bool WiFiCommunicator::request_to_send = false;
+volatile bool WiFiCommunicator::request_to_send = false;
 
 /**
  * @brief Starts the wifi communicator
@@ -43,6 +43,9 @@ int WiFiCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 void WiFiCommunicator::send_wifi(){
   assert(WiFiCommunicator::chest != nullptr);
   assert(WiFiCommunicator::air_flow != nullptr);
+
+  double distance = WiFiCommunicator::chest->get_distance();
+  double flow = WiFiCommunicator::air_flow->get_flow();
   
   // Verificar se há clientes
   WiFiClient client = WiFiCommunicator::server.available();
@@ -51,14 +54,15 @@ void WiFiCommunicator::send_wifi(){
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: text/html");
     client.println();
+    // client.println(String(6) + ";" + 3);
     client.println(
-                  String(WiFiCommunicator::chest->get_distance()) 
-                  + ";" + WiFiCommunicator::air_flow->get_flow()
+                  String(distance) 
+                  + ";" + flow
                   );
 #ifdef DEBUG
     Serial.println(
-                  String(WiFiCommunicator::chest->get_distance()) 
-                  + ";" + WiFiCommunicator::air_flow->get_flow()
+                  String(distance) 
+                  + ";" + flow
                   );
 #endif
     client.println();
@@ -67,10 +71,10 @@ void WiFiCommunicator::send_wifi(){
     client.stop();
   }
 
-  request_to_send = false;
+  WiFiCommunicator::request_to_send = false;
 }
 
 void WiFiCommunicator::ISR(void){
   digitalWrite(2,!digitalRead(2));
-  request_to_send = true;
+  WiFiCommunicator::request_to_send = true;
 }
