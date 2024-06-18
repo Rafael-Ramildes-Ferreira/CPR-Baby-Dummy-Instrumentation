@@ -59,16 +59,16 @@ void WiFiCommunicator::send_wifi(){
                   String(distance) 
                   + ";" + flow
                   );
+    client.println();
+    // Fechar a conexão com o cliente
+    client.stop();
+
 #ifdef DEBUG
     Serial.println(
                   String(distance) 
                   + ";" + flow
                   );
 #endif
-    client.println();
-    
-    // Fechar a conexão com o cliente
-    client.stop();
   }
 
   WiFiCommunicator::request_to_send = false;
