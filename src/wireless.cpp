@@ -1,5 +1,7 @@
 #include "main.h"
 #include "wireless.h"
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
 
 // volatile bool request_to_send = false;
@@ -54,11 +56,11 @@ void WiFiCommunicator::send_wifi(){
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: text/html");
     client.println();
-    // client.println(String(6) + ";" + 3);
-    client.println(
-                  String(distance) 
-                  + ";" + flow
-                  );
+    client.println(String(6) + ";" + 3);
+    // client.println(
+    //               String(distance) 
+    //               + ";" + flow
+    //               );
     client.println();
     // Fechar a conexão com o cliente
     client.stop();
@@ -77,4 +79,82 @@ void WiFiCommunicator::send_wifi(){
 void WiFiCommunicator::ISR(void){
   digitalWrite(2,!digitalRead(2));
   WiFiCommunicator::request_to_send = true;
+}
+
+/**
+ * @brief Starts the bluetooth communicator
+*/
+int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
+	// Informs the communicator which sensors are to be monitored
+	BlueToothCommunicator::chest = chest;
+	BlueToothCommunicator::air_flow = air_flow;
+	
+	// Configura a ESP32 como ponto de acesso
+  BLEDevice::init(DEVICENAME);
+  BlueToothCommunicator::btServer = BLEDevice::createServer();
+  #ifdef DEBUG
+  btServer->setCallbacks(new ConnectionServerCallbacks());
+  #endif
+
+  // Configura o Serviço
+  sSend = btServer->createService(SEND_UUID);
+  uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE  |
+                     BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
+
+  // Configura as caracteristicas
+  sSendCompress = sSend->createCharacteristic(COMPRESS_UUID, cnotify);
+  sSendCompress->addDescriptor(new BLE2902());
+  sSendCompress->setValue("0");
+  sSendFlow = sSend->createCharacteristic(FLOW_UUID, cnotify);
+  sSendFlow->addDescriptor(new BLE2902());
+  sSendFlow->setValue("0");
+  
+  #ifdef DEBUG
+  Serial.print("Device Name: ");
+  Serial.println(DEVICENAME);
+  #endif
+
+	// Configures the periodically routine in which messages are sent
+	BlueToothCommunicator::timer_it.set_timer_interrupt(&BlueToothCommunicator::ISR);
+
+  pinMode(2,OUTPUT);
+
+  return 0;
+}
+
+/**
+ * @brief Routine to send Bluetooth messages of the operation status
+*/
+void BlueToothCommunicator::update(){
+  assert(BlueToothCommunicator::chest != nullptr);
+  assert(BlueToothCommunicator::air_flow != nullptr);
+
+  // Calcula os valores
+  const String distance = String(BlueToothCommunicator::chest->get_distance());
+  const String flow = String(BlueToothCommunicator::air_flow->get_flow());
+  char dist_char_array[5];
+  distance.toCharArray(dist_char_array,5);
+  char flow_char_array[5];
+  flow.toCharArray(flow_char_array,5);
+  
+  // Atualiza os valores
+  BlueToothCommunicator::sSendCompress->setValue(dist_char_array);
+  BlueToothCommunicator::sSendCompress->notify();
+  
+  BlueToothCommunicator::sSendFlow->setValue(flow_char_array);
+  BlueToothCommunicator::sSendFlow->notify();
+
+#ifdef DEBUG
+    Serial.print("distance: ");
+    Serial.println(distance);
+    Serial.print("flow: ");
+    Serial.println(flow);
+#endif
+
+  BlueToothCommunicator::request_to_send = false;
+}
+
+void BlueToothCommunicator::ISR(void){
+  digitalWrite(2,!digitalRead(2));
+  BlueToothCommunicator::request_to_send = true;
 }
