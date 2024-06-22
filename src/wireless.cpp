@@ -14,6 +14,16 @@ WiFiServer WiFiCommunicator::server(80);
 const char*	WiFiCommunicator::ssid = "Boneco Resusci";
 volatile bool WiFiCommunicator::request_to_send = false;
 
+ChestCompression *BlueToothCommunicator::chest = nullptr;
+AirFlow *BlueToothCommunicator::air_flow = nullptr;
+TimerInterruption BlueToothCommunicator::timer_it(TIMER_0);
+const char*	BlueToothCommunicator::ssid = "Boneco Resusci";
+BLEServer *BlueToothCommunicator::btServer = nullptr;
+BLEService *BlueToothCommunicator::sSend = nullptr;
+BLECharacteristic *BlueToothCommunicator::sSendCompress = nullptr;
+BLECharacteristic *BlueToothCommunicator::sSendFlow = nullptr;
+volatile bool BlueToothCommunicator::request_to_send = false;
+
 /**
  * @brief Starts the wifi communicator
 */
