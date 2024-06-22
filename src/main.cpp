@@ -17,7 +17,7 @@
 
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
-WiFiCommunicator *communicator;
+BlueToothCommunicator *communicator;
 ChestCompression *chest = nullptr; // Temporary
 AirFlow air_flow;
 
@@ -44,9 +44,9 @@ void setup() {
   Serial.println("new ChestCompression();");
 #endif
 
-  communicator = new WiFiCommunicator();
+  communicator = new BlueToothCommunicator();
 #ifdef DEBUG
-  Serial.println("new WiFiCommunicator();");
+  Serial.println("new BlueToothCommunicator();");
 #endif
 
   air_flow.begin();
@@ -66,7 +66,7 @@ void loop() {
   
   if(communicator->request_to_send)
   {
-    communicator->send_wifi();
+    communicator->update();
   }
 }
 
