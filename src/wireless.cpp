@@ -22,6 +22,7 @@ BLEServer *BlueToothCommunicator::btServer = nullptr;
 BLEService *BlueToothCommunicator::sSend = nullptr;
 BLECharacteristic *BlueToothCommunicator::sSendCompress = nullptr;
 BLECharacteristic *BlueToothCommunicator::sSendFlow = nullptr;
+BLEAdvertising *BlueToothCommunicator::pAdvertising = nullptr;
 volatile bool BlueToothCommunicator::request_to_send = false;
 
 /**
@@ -107,17 +108,27 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
   #endif
 
   // Configura o Serviço
-  sSend = btServer->createService(SEND_UUID);
-  uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE  |
-                     BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
+  BlueToothCommunicator::sSend = btServer->createService(SEND_UUID);
+  uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE;//  |
+                    //  BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
 
   // Configura as caracteristicas
   sSendCompress = sSend->createCharacteristic(COMPRESS_UUID, cnotify);
   sSendCompress->addDescriptor(new BLE2902());
   sSendCompress->setValue("0");
-  sSendFlow = sSend->createCharacteristic(FLOW_UUID, cnotify);
-  sSendFlow->addDescriptor(new BLE2902());
-  sSendFlow->setValue("0");
+  // sSendFlow = sSend->createCharacteristic(FLOW_UUID, cnotify);
+  // sSendFlow->addDescriptor(new BLE2902());
+  // sSendFlow->setValue("0");
+
+  BlueToothCommunicator::sSend->start();
+
+  // Advertising
+  BlueToothCommunicator::pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SEND_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
+  pAdvertising->setMinPreferred(0x12);
+  BLEDevice::startAdvertising();
   
   #ifdef DEBUG
   Serial.print("Device Name: ");
@@ -128,6 +139,7 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 	BlueToothCommunicator::timer_it.set_timer_interrupt(&BlueToothCommunicator::ISR);
 
   pinMode(2,OUTPUT);
+  Serial.println("Tudo configurado");
 
   return 0;
 }
@@ -137,28 +149,29 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 */
 void BlueToothCommunicator::update(){
   assert(BlueToothCommunicator::chest != nullptr);
-  assert(BlueToothCommunicator::air_flow != nullptr);
+  // assert(BlueToothCommunicator::air_flow != nullptr);
+  Serial.println("Entrando em update");
 
   // Calcula os valores
   const String distance = String(BlueToothCommunicator::chest->get_distance());
-  const String flow = String(BlueToothCommunicator::air_flow->get_flow());
+  // const String flow = String(BlueToothCommunicator::air_flow->get_flow());
   char dist_char_array[5];
   distance.toCharArray(dist_char_array,5);
-  char flow_char_array[5];
-  flow.toCharArray(flow_char_array,5);
+  // char flow_char_array[5];
+  // flow.toCharArray(flow_char_array,5);
   
   // Atualiza os valores
   BlueToothCommunicator::sSendCompress->setValue(dist_char_array);
   BlueToothCommunicator::sSendCompress->notify();
   
-  BlueToothCommunicator::sSendFlow->setValue(flow_char_array);
-  BlueToothCommunicator::sSendFlow->notify();
+  // BlueToothCommunicator::sSendFlow->setValue(flow_char_array);
+  // BlueToothCommunicator::sSendFlow->notify();
 
 #ifdef DEBUG
     Serial.print("distance: ");
     Serial.println(distance);
-    Serial.print("flow: ");
-    Serial.println(flow);
+    // Serial.print("flow: ");
+    // Serial.println(flow);
 #endif
 
   BlueToothCommunicator::request_to_send = false;

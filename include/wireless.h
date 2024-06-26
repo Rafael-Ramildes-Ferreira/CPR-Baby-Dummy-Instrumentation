@@ -57,6 +57,7 @@ class BlueToothCommunicator{
 		static BLEService *sSend;
 		static BLECharacteristic *sSendCompress;
 		static BLECharacteristic *sSendFlow;
+		static BLEAdvertising *pAdvertising;
 };
 
 #ifdef DEBUG
