@@ -1,6 +1,7 @@
 #include "chest_compressions.h"
 #include "utils.h"
 #include "main.h"
+#include "Arduino.h"
 
 // Peak and valley finder algorithm configuration
 #define BUFFER_SIZE 		10
@@ -9,15 +10,16 @@
 #define VL6180X_ADDR 0x29
 
 
-/**
- * @brief Chest compression constructor
-*/
-ChestCompression::ChestCompression(){
+int ChestCompression::begin(){
 	this->dist_sensor = Adafruit_VL6180X(VL6180X_ADDR);
 
-	if (!this->dist_sensor.begin()) {
-		error_handler();
-	}
+#ifdef FREQUENCY_ON_ESP
+	this->last_valley_time = millis();
+	this->last_peak_time = millis();
+#endif
+
+//   return this->dist_sensor.begin();
+	return 1;
 }
 
 /**
@@ -50,6 +52,12 @@ double ChestCompression::calc_distance(){
 	return this->distance;
 }
 
+double ChestCompression::get_distance(){
+	return this->distance;
+}
+
+
+#ifdef FREQUENCY_ON_ESP
 /**
  * @brief Calculates a new value of this->frequency based on sensor readings
  * @returns The calculated frequency
@@ -131,11 +139,7 @@ double ChestCompression::last_valley(double distance){
 	return last_valley;
 }
 
-
-double ChestCompression::get_distance(){
-	return this->distance;
-}
-
 double ChestCompression::get_frequency(){
 	return this->frequency;
 }
+#endif

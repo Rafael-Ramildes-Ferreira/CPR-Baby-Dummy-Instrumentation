@@ -18,7 +18,7 @@
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 WiFiCommunicator *communicator;
-ChestCompression *chest = nullptr; // Temporary
+ChestCompression *chest;
 AirFlow air_flow;
 
 #ifdef DEBUG
@@ -39,14 +39,13 @@ void setup() {
 #ifdef DEBUG
   Serial.println("Começando");
 #endif
-  chest = new ChestCompression(); // Temporary
-#ifdef DEBUG
-  Serial.println("new ChestCompression();");
-#endif
 
-  communicator = new WiFiCommunicator();
+  chest = new ChestCompression();
+  if(!(chest->begin())){
+    error_handler();
+  }
 #ifdef DEBUG
-  Serial.println("new WiFiCommunicator();");
+  Serial.println("chest.begin()");
 #endif
 
   air_flow.begin();
@@ -54,8 +53,8 @@ void setup() {
   Serial.println("air_flow.begin();");
 #endif
   
-  // communicator->begin(nullptr,nullptr);
-  communicator->begin(chest,&air_flow);
+  communicator->begin(nullptr,nullptr);
+  // communicator->begin(chest,&air_flow);
 #ifdef DEBUG
   Serial.println("communicator->begin(chest,&air_flow);");
 #endif
