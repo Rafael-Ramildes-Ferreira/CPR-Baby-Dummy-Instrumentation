@@ -62,6 +62,16 @@ void setup() {
 
 void loop() {
   rtc_wdt_feed();
+
+  chest->calc_distance();
+  chest->calc_frequency();
+  
+  if(i%100 == 0){
+    Serial.print("Distance: ");
+    Serial.println(chest->get_distance);
+    Serial.print("Frequency: ");
+    Serial.println(chest->get_frequency);
+  }
   
   if(request_to_send)
   {
