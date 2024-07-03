@@ -148,7 +148,6 @@ double ChestCompression::update_frequency(){
 }
 
 double ChestCompression::get_frequency(){
-	this->calc_frequency();
 	return this->frequency;
 }
 #endif

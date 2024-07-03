@@ -196,5 +196,6 @@ void BlueToothCommunicator::update(){
 
 void BlueToothCommunicator::ISR(void){
   digitalWrite(2,!digitalRead(2));
+  BlueToothCommunicator::update();
   BlueToothCommunicator::request_to_send = true;
 }
