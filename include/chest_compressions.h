@@ -4,9 +4,10 @@
 #include <Adafruit_VL6180X.h>
 #include "buildconfig.h"
 
+#ifdef FREQUENCY_ON_ESP
 // Peak and valley finder algorithm configuration
-#define BUFFER_SIZE 		10
-#define DEVIATION_THRESHOLD	0.05
+#define BUFFER_SIZE	(3)
+#endif
 
 
 class ChestCompression{

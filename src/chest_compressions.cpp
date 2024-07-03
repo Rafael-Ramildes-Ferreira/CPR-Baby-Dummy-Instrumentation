@@ -4,7 +4,10 @@
 #include "Arduino.h"
 
 
-#define MEAN_DIST_VALUE (4)
+#ifdef FREQUENCY_ON_ESP
+#define DEVIATION_THRESHOLD (.03)
+#define MEAN_DIST_VALUE     (3.5)
+#endif
 
 #define VL6180X_ADDR 0x29
 
