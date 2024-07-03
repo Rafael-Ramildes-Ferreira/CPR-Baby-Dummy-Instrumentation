@@ -33,11 +33,6 @@ class ChestCompression{
 		double frequency;
 	#endif
 
-    	double mean,deviation;
-    	double last_valley_time,last_peak_time;
-		double frequency;
-	#endif
-
 		Adafruit_VL6180X dist_sensor;
 		double distance;
 };
