@@ -48,9 +48,9 @@ void setup() {
   Serial.println("chest.begin()");
 #endif
 
-  air_flow.begin();
+  // air_flow.begin();
 #ifdef DEBUG
-  Serial.println("air_flow.begin();");
+  // Serial.println("air_flow.begin();");
 #endif
   
   communicator->begin(nullptr,nullptr);
@@ -64,14 +64,20 @@ void loop() {
   rtc_wdt_feed();
 
   chest->calc_distance();
-  chest->calc_frequency();
-  
+  #ifdef DEBUG
   if(i%100 == 0){
     Serial.print("Distance: ");
-    Serial.println(chest->get_distance);
-    Serial.print("Frequency: ");
-    Serial.println(chest->get_frequency);
+    Serial.println(chest->get_distance());
   }
+  #endif
+
+  chest->calc_frequency();  
+  #ifdef DEBUG
+  if(i%100 == 0){
+    Serial.print("Frequency: ");
+    Serial.println(chest->get_frequency());
+  }
+  #endif
   
   if(request_to_send)
   {

@@ -58,7 +58,7 @@ double ChestCompression::get_distance(){
 
 #ifdef FREQUENCY_ON_ESP
 /**
- * @brief Calculates a new value of this->frequency based on sensor readings
+ * @brief Starts the frequency calculation routine
  * @returns The calculated frequency
 */
 double ChestCompression::calc_frequency(){
@@ -66,9 +66,10 @@ double ChestCompression::calc_frequency(){
 	this->mean = utils::calculate_mean(this->readings,BUFFER_SIZE);
 	this->deviation = utils::calculate_std_deviation(this->readings,this->mean,BUFFER_SIZE);
 
-	double period = 2*abs(this->last_peak() - this->last_valley());
+  // Updates the peak and valleys time
+  this->last_peak();
+  this->last_valley();
 
-	this->frequency = 1e3/period;
 	return this->frequency;
 }
 
@@ -89,7 +90,12 @@ double ChestCompression::last_peak(){
       }
 
       if(is_bigger){
-        last_peak_time = millis();
+          // Calculates the frequency between last peak (not the one found here) and last valley
+          if(last_peak_time < last_valley_time)
+            this->update_frequency();
+          
+          // Records the time in witch it happened          
+          last_peak_time = millis();
       } 
     }
   }
@@ -104,18 +110,33 @@ double ChestCompression::last_valley(){
 			// Checks if distance is smaller than recently read values
 			bool is_smaller = true;
 			for(double value : this->readings){
-			if(this->distance > value){
-				is_smaller = false;
-			}
+        if(this->distance > value){
+          is_smaller = false;
+        }
 			}
 
 			if(is_smaller){
-			last_valley_time = millis();
+        // Calculates the frequency between last peak and last valley (not the one found here)
+        if(last_peak_time > last_valley_time)
+          this->update_frequency();
+
+        // Records the time in witch it happened
+			  last_valley_time = millis();
 			} 
 		}
 	}
 
 		return last_valley_time;
+}
+/**
+ * @brief Calculates a new value of this->frequency based on sensor readings
+ * @returns The calculated frequency
+*/
+double ChestCompression::update_frequency(){
+	double period = 2*abs(this->last_peak_time - this->last_valley_time);
+
+	this->frequency = 1e3/period;
+	return this->frequency;
 }
 
 double ChestCompression::get_frequency(){

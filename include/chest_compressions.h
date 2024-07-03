@@ -23,6 +23,7 @@ class ChestCompression{
 	#ifdef FREQUENCY_ON_ESP
 		double last_peak();
 		double last_valley();
+		double update_frequency();
 
 		double readings[BUFFER_SIZE];
     	unsigned int buffer_index;
