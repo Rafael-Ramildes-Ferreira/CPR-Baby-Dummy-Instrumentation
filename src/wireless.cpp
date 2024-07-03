@@ -188,14 +188,7 @@ void BlueToothCommunicator::update(){
   // BlueToothCommunicator::sSendFlow->notify();
 
 #ifdef DEBUG
-    Serial.print("distance: ");
-    Serial.println(distance);
-    #ifdef FREQUENCY_ON_ESP
-    Serial.print("frequency: ");
-    Serial.println(frequency);
-    #endif
-    // Serial.print("flow: ");
-    // Serial.println(flow);
+    Serial.print(".");
 #endif
 
   BlueToothCommunicator::request_to_send = false;

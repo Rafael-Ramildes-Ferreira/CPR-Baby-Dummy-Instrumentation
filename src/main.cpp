@@ -71,25 +71,22 @@ void loop() {
   chest->calc_distance();
   #ifdef DEBUG
   if(i%100 == 0){
-    Serial.print("Distance: ");
+    Serial.print("\nDistance: ");
     Serial.println(chest->get_distance());
   }
   #endif
 
+  #ifdef FREQUENCY_ON_ESP
   chest->calc_frequency();  
   #ifdef DEBUG
   if(i%100 == 0){
     Serial.print("Frequency: ");
     Serial.println(chest->get_frequency());
   }
+  i++;
   #endif
-  
-  if(i++%100 == 0){
-    Serial.print("distance: ");
-    Serial.println(chest->get_distance());
-    // Serial.print("flow: ");
-    // Serial.println(air_flow.get_flow());
-  }
+  #endif
+
   if(communicator->request_to_send)
   {
     communicator->update();
