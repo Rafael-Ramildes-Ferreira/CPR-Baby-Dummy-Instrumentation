@@ -109,8 +109,8 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 
   // Configura o Serviço
   BlueToothCommunicator::sSend = btServer->createService(SEND_UUID);
-  uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE;//  |
-                    //  BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
+  uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
 
   // Configura as caracteristicas
   sSendCompress = sSend->createCharacteristic(COMPRESS_UUID, cnotify);
