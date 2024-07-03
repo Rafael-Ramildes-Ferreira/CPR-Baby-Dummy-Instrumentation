@@ -46,7 +46,12 @@ double ChestCompression::calc_distance(){
     
     this->readings[buffer_index%BUFFER_SIZE] = this->distance;
     this->buffer_index++;
-  }
+  } else {
+		#ifdef DEBUG
+			Serial.print("Distance sensor Error Code: ");
+			Serial.println(dist_sensor.readRangeStatus());
+		#endif
+	}
 
   return this->distance;
 }
@@ -140,6 +145,7 @@ double ChestCompression::update_frequency(){
 }
 
 double ChestCompression::get_frequency(){
+	this->calc_frequency();
 	return this->frequency;
 }
 #endif

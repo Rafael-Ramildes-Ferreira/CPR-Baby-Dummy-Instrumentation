@@ -76,6 +76,7 @@ class TimerInterruption{
 	public:
 		TimerInterruption(uint8_t timer_instance);
 		int set_timer_interrupt(void func(void));
+		// void ISR(void);
 	private:
 		hw_timer_t *timer_cfg;
 };
