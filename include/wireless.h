@@ -12,6 +12,9 @@
 #define DEVICENAME		"Boneco Ressuci"
 #define SEND_UUID		"9a9a40aa-805e-4677-bc7c-3ce43fee3e31"
 #define COMPRESS_UUID	"bc98e173-d5aa-491d-af24-b45386ec0102"
+#ifdef FREQUENCY_ON_ESP
+#define FREQUENCY_UUID	"f0dba94a-6b7c-4c3e-b887-63c36ca021a0"
+#endif
 #define FLOW_UUID		"685df5a8-09ab-4198-b8b4-665e60e21611"
 
 /**
@@ -56,6 +59,9 @@ class BlueToothCommunicator{
 		static BLEServer *btServer;
 		static BLEService *sSend;
 		static BLECharacteristic *sSendCompress;
+  		#ifdef FREQUENCY_ON_ESP
+		static BLECharacteristic *sSendFrequency;
+		#endif
 		static BLECharacteristic *sSendFlow;
 		static BLEAdvertising *pAdvertising;
 };
