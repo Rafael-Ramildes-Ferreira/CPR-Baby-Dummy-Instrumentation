@@ -6,4 +6,6 @@
 #include <Arduino.h>
 #endif
 
+#define FREQUENCY_ON_ESP
+
 #endif

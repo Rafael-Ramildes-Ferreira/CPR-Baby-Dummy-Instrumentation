@@ -17,8 +17,8 @@
 
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
-BlueToothCommunicator *communicator;
-ChestCompression *chest = nullptr; // Temporary
+WiFiCommunicator *communicator;
+ChestCompression *chest;
 // AirFlow air_flow;
 
 #ifdef DEBUG
@@ -39,19 +39,23 @@ void setup() {
 #ifdef DEBUG
   Serial.println("Começando");
 #endif
-  chest = new ChestCompression(); // Temporary
+  
+  chest = new ChestCompression();
+  if(!(chest->begin())){
+    error_handler();
+  }
 #ifdef DEBUG
-  Serial.println("new ChestCompression();");
-#endif
-
-  communicator = new BlueToothCommunicator();
-#ifdef DEBUG
-  Serial.println("new BlueToothCommunicator();");
+  Serial.println("chest.begin()");
 #endif
 
   // air_flow.begin();
 #ifdef DEBUG
   // Serial.println("air_flow.begin();");
+#endif
+
+  communicator = new BlueToothCommunicator();
+#ifdef DEBUG
+  Serial.println("new BlueToothCommunicator();");
 #endif
   
   // communicator->begin(nullptr,nullptr);
@@ -63,6 +67,22 @@ void setup() {
 
 void loop() {
   rtc_wdt_feed();
+
+  chest->calc_distance();
+  #ifdef DEBUG
+  if(i%100 == 0){
+    Serial.print("Distance: ");
+    Serial.println(chest->get_distance());
+  }
+  #endif
+
+  chest->calc_frequency();  
+  #ifdef DEBUG
+  if(i%100 == 0){
+    Serial.print("Frequency: ");
+    Serial.println(chest->get_frequency());
+  }
+  #endif
   
   if(i++%100 == 0){
     Serial.print("distance: ");
