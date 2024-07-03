@@ -17,7 +17,7 @@
 
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
-WiFiCommunicator *communicator;
+BlueToothCommunicator *communicator;
 ChestCompression *chest;
 // AirFlow air_flow;
 
