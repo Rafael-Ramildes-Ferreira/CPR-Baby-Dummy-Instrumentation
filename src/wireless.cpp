@@ -41,31 +41,31 @@ int WiFiCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
  * @brief Routine to send Wi-Fi messages of the operation status
 */
 void WiFiCommunicator::send_wifi(){
-  assert(WiFiCommunicator::chest != nullptr);
-  assert(WiFiCommunicator::air_flow != nullptr);
+//   assert(WiFiCommunicator::chest != nullptr);
+//   assert(WiFiCommunicator::air_flow != nullptr);
   
-  // Verificar se há clientes
-  WiFiClient client = WiFiCommunicator::server.available();
-  if (client.available()) {
-    // Responde à solicitação do cliente
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-Type: text/html");
-    client.println();
-    client.println(
-                  String(WiFiCommunicator::chest->get_distance()) 
-                  + ";" + WiFiCommunicator::air_flow->get_flow()
-                  );
-#ifdef DEBUG
-    Serial.println(
-                  String(WiFiCommunicator::chest->get_distance()) 
-                  + ";" + WiFiCommunicator::air_flow->get_flow()
-                  );
-#endif
-    client.println();
+//   // Verificar se há clientes
+//   WiFiClient client = WiFiCommunicator::server.available();
+//   if (client.available()) {
+//     // Responde à solicitação do cliente
+//     client.println("HTTP/1.1 200 OK");
+//     client.println("Content-Type: text/html");
+//     client.println();
+//     client.println(
+//                   String(WiFiCommunicator::chest->get_distance()) 
+//                   + ";" + WiFiCommunicator::air_flow->get_flow()
+//                   );
+// #ifdef DEBUG
+//     Serial.println(
+//                   String(WiFiCommunicator::chest->get_distance()) 
+//                   + ";" + WiFiCommunicator::air_flow->get_flow()
+//                   );
+// #endif
+//     client.println();
     
-    // Fechar a conexão com o cliente
-    client.stop();
-  }
+//     // Fechar a conexão com o cliente
+//     client.stop();
+//  }
 
   request_to_send = false;
 }
