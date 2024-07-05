@@ -1,7 +1,9 @@
 #include "main.h"
 #include "wireless.h"
+#include "utils.h"
 #include <BLEUtils.h>
 #include <BLE2902.h>
+#include <string.h>
 
 
 // volatile bool request_to_send = false;
@@ -33,6 +35,7 @@ BLECharacteristic *BlueToothCommunicator::sSendFlow = nullptr;
 #endif	// AIR_FLOW_SENSOR
 BLEAdvertising *BlueToothCommunicator::pAdvertising = nullptr;
 volatile bool BlueToothCommunicator::request_to_send = false;
+volatile bool BlueToothCommunicator::conected = false;
 
 
 #ifdef WIFI_COMMINICATION
@@ -149,8 +152,8 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
   BlueToothCommunicator::pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SEND_UUID);
   pAdvertising->setScanResponse(true);
-  pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
-  pAdvertising->setMinPreferred(0x12);
+  pAdvertising->setMinPreferred(0x04);  // (0x06) functions that help with iPhone connections issue
+  // pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising();
   
   #ifdef DEBUG
@@ -180,35 +183,35 @@ void BlueToothCommunicator::update(){
 
   // Calcula os valores
   #ifdef DISTANCE_SENSOR
-  const String distance = String(BlueToothCommunicator::chest->get_distance());
+  float distance = BlueToothCommunicator::chest->get_distance();
   #ifdef FREQUENCY_ON_ESP
-  const String frequency = String(BlueToothCommunicator::chest->get_frequency());
+  float frequency = BlueToothCommunicator::chest->get_frequency();
   #endif  // FREQUENCY_ON_ESP
   #endif  // DISTANCE_SENSOR
   #ifdef AIR_FLOW_SENSOR
-  const String flow = String(BlueToothCommunicator::air_flow->get_flow());
+  float flow = BlueToothCommunicator::air_flow->get_flow();
   #endif  // AIR_FLOW_SENSOR
 
   #ifdef DISTANCE_SENSOR
-  char dist_char_array[5];
-  distance.toCharArray(dist_char_array,5);
+  uint8_t dist_char_array[4];
+  memcpy(dist_char_array, &distance, 4);
   #ifdef FREQUENCY_ON_ESP
-  char freq_char_array[5];
-  frequency.toCharArray(freq_char_array,5);
+  uint8_t freq_char_array[4];
+  memcpy(freq_char_array, &frequency, 4);
   #endif  // FREQUENCY_ON_ESP
   #endif  // DISTANCE_SENSOR
   #ifdef AIR_FLOW_SENSOR
-  char flow_char_array[5];
-  flow.toCharArray(flow_char_array,5);
+  char flow_char_array[4];
+  memcpy(flow_char_array, &flow, 4);
   #endif  // AIR_FLOW_SENSOR
   
   // Atualiza os valores
   #ifdef DISTANCE_SENSOR
-  BlueToothCommunicator::sSendCompress->setValue(dist_char_array);
+  BlueToothCommunicator::sSendCompress->setValue(dist_char_array,4);
   BlueToothCommunicator::sSendCompress->notify();
   
   #ifdef FREQUENCY_ON_ESP
-  BlueToothCommunicator::sSendFrequency->setValue(freq_char_array);
+  BlueToothCommunicator::sSendFrequency->setValue(freq_char_array,4);
   BlueToothCommunicator::sSendFrequency->notify();
   #endif  // FREQUENCY_ON_ESP
   #endif  // DISTANCE_SENSOR
@@ -226,6 +229,8 @@ void BlueToothCommunicator::update(){
 }
 
 void BlueToothCommunicator::ISR(void){
-  digitalWrite(2,!digitalRead(2));
-  BlueToothCommunicator::request_to_send = true;
+  if(BlueToothCommunicator::conected == true){
+    digitalWrite(2,!digitalRead(2));
+    BlueToothCommunicator::request_to_send = true;
+  }
 }

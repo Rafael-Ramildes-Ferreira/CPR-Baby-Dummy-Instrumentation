@@ -47,8 +47,10 @@ double ChestCompression::calc_distance(){
 
     this->distance = yn/10.0;
     
+    #ifdef FREQUENCY_ON_ESP
     this->readings[buffer_index%BUFFER_SIZE] = this->distance;
     this->buffer_index++;
+    #endif  // FREQUENCY_ON_ESP
   } else {
 		#ifdef DEBUG
 			Serial.print("Distance sensor Error Code: ");
