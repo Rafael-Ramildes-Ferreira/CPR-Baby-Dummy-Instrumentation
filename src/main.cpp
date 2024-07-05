@@ -77,7 +77,6 @@ void loop() {
   #endif
 
   #ifdef FREQUENCY_ON_ESP
-  rtc_wdt_feed();
   chest->calc_frequency();  
   #ifdef DEBUG
   if(i%100 == 0){
@@ -87,6 +86,11 @@ void loop() {
   i++;
   #endif
   #endif
+
+  if(communicator->request_to_send)
+  {
+    communicator->update();
+  }
 }
 
 
