@@ -66,8 +66,9 @@ void setup() {
 }
 
 void loop() {
-  rtc_wdt_feed();
 
+  // Distance
+  rtc_wdt_feed();
   chest->calc_distance();
   #ifdef DEBUG
   if(i%100 == 0){
@@ -76,8 +77,9 @@ void loop() {
   }
   #endif
 
-  rtc_wdt_feed();
+  // Frequency
   #ifdef FREQUENCY_ON_ESP
+  rtc_wdt_feed();
   chest->calc_frequency();  
   #ifdef DEBUG
   if(i%100 == 0){
@@ -87,6 +89,16 @@ void loop() {
   i++;
   #endif
   #endif
+  
+  // // Air Flow
+  // rtc_wdt_feed();
+  // air_flow->readFlow();
+  // #ifdef DEBUG
+  // if(i%100 == 0){
+  //   Serial.print("Air flow: ");
+  //   Serial.println(air_flow->get_flow());
+  // }
+  // #endif
 
   if(communicator->request_to_send)
   {
