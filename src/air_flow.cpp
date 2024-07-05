@@ -1,3 +1,6 @@
+#include "buildconfig.h"
+
+#ifdef AIR_FLOW_SENSOR
 #include "air_flow.h"
 
 /**
@@ -33,3 +36,5 @@ double AirFlow::get_flow()
 {
 	return this->flow;
 }
+
+#endif	// AIR_FLOW_SENSOR

@@ -18,8 +18,12 @@
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 BlueToothCommunicator *communicator;
+#ifdef DISTANCE_SENSOR
 ChestCompression *chest;
-// AirFlow air_flow;
+#endif  // DISTANCE_SENSOR
+#ifdef AIR_FLOW_SENSOR
+AirFlow air_flow;
+#endif  // AIR_FLOW_SENSOR
 
 #ifdef DEBUG
 // Debug
@@ -66,39 +70,47 @@ void setup() {
 }
 
 void loop() {
+  #ifdef DISTANCE_SENSOR
 
   // Distance
   rtc_wdt_feed();
   chest->calc_distance();
+
   #ifdef DEBUG
   if(i%100 == 0){
     Serial.print("\nDistance: ");
     Serial.println(chest->get_distance());
   }
-  #endif
+  #endif  // DEBUG
 
-  // Frequency
   #ifdef FREQUENCY_ON_ESP
+  // Frequency
   rtc_wdt_feed();
   chest->calc_frequency();  
+  
   #ifdef DEBUG
   if(i%100 == 0){
     Serial.print("Frequency: ");
     Serial.println(chest->get_frequency());
   }
   i++;
-  #endif
-  #endif
+  #endif  // DEBUG 
+  #endif  // FREQUENCY_ON_ESP
+
+  #endif  // DISTANCE_SENSOR
   
-  // // Air Flow
-  // rtc_wdt_feed();
-  // air_flow->readFlow();
-  // #ifdef DEBUG
-  // if(i%100 == 0){
-  //   Serial.print("Air flow: ");
-  //   Serial.println(air_flow->get_flow());
-  // }
-  // #endif
+  // Air Flow
+  #ifdef AIR_FLOW_SENSOR
+  rtc_wdt_feed();
+  air_flow.readFlow();
+
+  #ifdef DEBUG
+  if(i%100 == 0){
+    Serial.print("Air flow: ");
+    Serial.println(air_flow.get_flow());
+  }
+  #endif  // DEBUG
+  #endif  // AIR_FLOW_SENSOR
 
   if(communicator->request_to_send)
   {

@@ -7,6 +7,7 @@
 #include "chest_compressions.h"
 #include "timerinterruption.h"
 #include "air_flow.h"
+#include "buildconfig.h"
 
 
 #define DEVICENAME		"Boneco Ressuci"
@@ -17,6 +18,8 @@
 #endif
 #define FLOW_UUID		"685df5a8-09ab-4198-b8b4-665e60e21611"
 
+
+#ifdef WIFI_COMMINICATION
 /**
  * @brief Class to deal with setup and running of the periadical WiFi transmit
  * routine
@@ -37,6 +40,7 @@ class WiFiCommunicator{
 		static TimerInterruption timer_it;
 		static WiFiServer server;
 };
+#endif	// WIFI_COMMINICATION
 
 /**
  * @brief Class to deal with setup and running of the periadical Bluetooth transmit
@@ -58,11 +62,15 @@ class BlueToothCommunicator{
 		static TimerInterruption timer_it;
 		static BLEServer *btServer;
 		static BLEService *sSend;
+		#ifdef DISTANCE_SENSOR
 		static BLECharacteristic *sSendCompress;
   		#ifdef FREQUENCY_ON_ESP
 		static BLECharacteristic *sSendFrequency;
-		#endif
+		#endif	// FREQUENCY_ON_ESP
+		#endif	// DISTANCE_SENSOR
+		#ifdef AIR_FLOW_SENSOR
 		static BLECharacteristic *sSendFlow;
+		#endif	// AIR_FLOW_SENSOR
 		static BLEAdvertising *pAdvertising;
 };
 

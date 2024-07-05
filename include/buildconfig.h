@@ -7,5 +7,7 @@
 #endif
 
 #define FREQUENCY_ON_ESP
+#define DISTANCE_SENSOR
+// #define AIR_FLOW_SENSOR
 
 #endif

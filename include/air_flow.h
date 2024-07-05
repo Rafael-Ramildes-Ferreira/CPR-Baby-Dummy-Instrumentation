@@ -20,4 +20,4 @@ class AirFlow
 		double get_flow();
 };
 
-#endif
+#endif	// __AIR_FLOW_H
