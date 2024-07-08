@@ -48,30 +48,31 @@ class WiFiCommunicator{
 */
 class BlueToothCommunicator{
 	public:
-		static int begin(ChestCompression *chest, AirFlow *airflow);
-		static void update(void);
+		BlueToothCommunicator();
+		int begin(ChestCompression *chest, AirFlow *airflow);
+		void update(void);
 		
 		// ISR: Interrupt Service Routine
 		static void ISR(void);
 		static volatile bool request_to_send, conected;
 
 	private:
-		static ChestCompression *chest;
-		static AirFlow *air_flow;
-		static const char* ssid; // Nome do seu ponto de acesso
+		ChestCompression *chest;
+		AirFlow *air_flow;
+		const char* ssid; // Nome do seu ponto de acesso
 		static TimerInterruption timer_it;
-		static BLEServer *btServer;
-		static BLEService *sSend;
+		BLEServer *btServer;
+		BLEService *sSend;
 		#ifdef DISTANCE_SENSOR
-		static BLECharacteristic *sSendCompress;
+		BLECharacteristic *sSendCompress;
   		#ifdef FREQUENCY_ON_ESP
-		static BLECharacteristic *sSendFrequency;
+		BLECharacteristic *sSendFrequency;
 		#endif	// FREQUENCY_ON_ESP
 		#endif	// DISTANCE_SENSOR
 		#ifdef AIR_FLOW_SENSOR
-		static BLECharacteristic *sSendFlow;
+		BLECharacteristic *sSendFlow;
 		#endif	// AIR_FLOW_SENSOR
-		static BLEAdvertising *pAdvertising;
+		BLEAdvertising *pAdvertising;
 };
 
 #ifdef DEBUG

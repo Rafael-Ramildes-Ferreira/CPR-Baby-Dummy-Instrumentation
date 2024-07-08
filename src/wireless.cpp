@@ -18,22 +18,22 @@ const char*	WiFiCommunicator::ssid = "Boneco Resusci";
 volatile bool WiFiCommunicator::request_to_send = false;
 #endif	// WIFI_COMMINICATION
 
-ChestCompression *BlueToothCommunicator::chest = nullptr;
-AirFlow *BlueToothCommunicator::air_flow = nullptr;
+// ChestCompression *BlueToothCommunicator::chest = nullptr;
+// AirFlow *BlueToothCommunicator::air_flow = nullptr;
 TimerInterruption BlueToothCommunicator::timer_it(TIMER_0);
-const char*	BlueToothCommunicator::ssid = "Boneco Resusci";
-BLEServer *BlueToothCommunicator::btServer = nullptr;
-BLEService *BlueToothCommunicator::sSend = nullptr;
-#ifdef DISTANCE_SENSOR
-BLECharacteristic *BlueToothCommunicator::sSendCompress = nullptr;
-#ifdef FREQUENCY_ON_ESP
-BLECharacteristic *BlueToothCommunicator::sSendFrequency = nullptr;
-#endif  // FREQUENCY_ON_ESP
-#endif	// DISTANCE_SENSOR
-#ifdef AIR_FLOW_SENSOR
-BLECharacteristic *BlueToothCommunicator::sSendFlow = nullptr;
-#endif	// AIR_FLOW_SENSOR
-BLEAdvertising *BlueToothCommunicator::pAdvertising = nullptr;
+// const char*	BlueToothCommunicator::ssid = "Boneco Resusci";
+// BLEServer *BlueToothCommunicator::btServer = nullptr;
+// BLEService *BlueToothCommunicator::sSend = nullptr;
+// #ifdef DISTANCE_SENSOR
+// BLECharacteristic *BlueToothCommunicator::sSendCompress = nullptr;
+// #ifdef FREQUENCY_ON_ESP
+// BLECharacteristic *BlueToothCommunicator::sSendFrequency = nullptr;
+// #endif  // FREQUENCY_ON_ESP
+// #endif	// DISTANCE_SENSOR
+// #ifdef AIR_FLOW_SENSOR
+// BLECharacteristic *BlueToothCommunicator::sSendFlow = nullptr;
+// #endif	// AIR_FLOW_SENSOR
+// BLEAdvertising *BlueToothCommunicator::pAdvertising = nullptr;
 volatile bool BlueToothCommunicator::request_to_send = false;
 volatile bool BlueToothCommunicator::conected = false;
 
@@ -107,23 +107,42 @@ void WiFiCommunicator::ISR(void){
 }
 #endif  // WIFI_COMMINICATION
 
+
+BlueToothCommunicator::BlueToothCommunicator(){
+  this->chest = nullptr;
+  this->air_flow = nullptr;
+  // this->timer_it = time_t(TIMER_0);
+  this->ssid = "Boneco Resusci";
+  this->btServer = nullptr;
+  this->sSend = nullptr;
+  #ifdef DISTANCE_SENSOR
+  this->sSendCompress = nullptr;
+  #ifdef FREQUENCY_ON_ESP
+  this->sSendFrequency = nullptr;
+  #endif  // FREQUENCY_ON_ESP
+  #endif	// DISTANCE_SENSOR
+  #ifdef AIR_FLOW_SENSOR
+  this->sSendFlow = nullptr;
+  #endif	// AIR_FLOW_SENSOR
+  this->pAdvertising = nullptr;
+}
 /**
  * @brief Starts the bluetooth communicator
 */
 int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 	// Informs the communicator which sensors are to be monitored
-	BlueToothCommunicator::chest = chest;
-	BlueToothCommunicator::air_flow = air_flow;
+	this->chest = chest;
+	this->air_flow = air_flow;
 	
 	// Configura a ESP32 como ponto de acesso
   BLEDevice::init(DEVICENAME);
-  BlueToothCommunicator::btServer = BLEDevice::createServer();
+  this->btServer = BLEDevice::createServer();
   #ifdef DEBUG
   btServer->setCallbacks(new ConnectionServerCallbacks());
   #endif
 
   // Configura o Serviço
-  BlueToothCommunicator::sSend = btServer->createService(SEND_UUID);
+  this->sSend = btServer->createService(SEND_UUID);
   uint32_t cnotify = BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE  |
                       BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_INDICATE;
 
@@ -162,7 +181,7 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
   #endif
 
 	// Configures the periodically routine in which messages are sent
-	BlueToothCommunicator::timer_it.set_timer_interrupt(&BlueToothCommunicator::ISR);
+	this->timer_it.set_timer_interrupt(&BlueToothCommunicator::ISR);
 
   pinMode(2,OUTPUT);
   Serial.println("Tudo configurado");
@@ -175,21 +194,21 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
 */
 void BlueToothCommunicator::update(){
   #ifdef DISTANCE_SENSOR
-  assert(BlueToothCommunicator::chest != nullptr);
+  assert(this->chest != nullptr);
   #endif  // DISTANCE_SENSOR
   #ifdef AIR_FLOW_SENSOR
-  assert(BlueToothCommunicator::air_flow != nullptr);
+  assert(this->air_flow != nullptr);
   #endif  // AIR_FLOW_SENSOR
 
   // Calcula os valores
   #ifdef DISTANCE_SENSOR
-  float distance = BlueToothCommunicator::chest->get_distance();
+  float distance = this->chest->get_distance();
   #ifdef FREQUENCY_ON_ESP
-  float frequency = BlueToothCommunicator::chest->get_frequency();
+  float frequency = this->chest->get_frequency();
   #endif  // FREQUENCY_ON_ESP
   #endif  // DISTANCE_SENSOR
   #ifdef AIR_FLOW_SENSOR
-  float flow = BlueToothCommunicator::air_flow->get_flow();
+  float flow = this->air_flow->get_flow();
   #endif  // AIR_FLOW_SENSOR
 
   #ifdef DISTANCE_SENSOR
@@ -207,18 +226,18 @@ void BlueToothCommunicator::update(){
   
   // Atualiza os valores
   #ifdef DISTANCE_SENSOR
-  BlueToothCommunicator::sSendCompress->setValue(dist_char_array,4);
-  BlueToothCommunicator::sSendCompress->notify();
+  this->sSendCompress->setValue(dist_char_array,4);
+  this->sSendCompress->notify();
   
   #ifdef FREQUENCY_ON_ESP
-  BlueToothCommunicator::sSendFrequency->setValue(freq_char_array,4);
-  BlueToothCommunicator::sSendFrequency->notify();
+  this->sSendFrequency->setValue(freq_char_array,4);
+  this->sSendFrequency->notify();
   #endif  // FREQUENCY_ON_ESP
   #endif  // DISTANCE_SENSOR
   
   # ifdef AIR_FLOW_SENSOR
-  BlueToothCommunicator::sSendFlow->setValue(flow_char_array);
-  BlueToothCommunicator::sSendFlow->notify();
+  this->sSendFlow->setValue(flow_char_array);
+  this->sSendFlow->notify();
   #endif  // AIR_FLOW_SENSOR
 
 #ifdef DEBUG
