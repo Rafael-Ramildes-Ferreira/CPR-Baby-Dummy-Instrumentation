@@ -89,6 +89,8 @@ class ConnectionServerCallbacks : public BLEServerCallbacks{
 
 		void onDisconnect(BLEServer* pServer) {
 			Serial.println("Disconnected");
+			BLEDevice::startAdvertising();
+    		digitalWrite(2,LOW);
 			BlueToothCommunicator::conected = false;
 		}
 };

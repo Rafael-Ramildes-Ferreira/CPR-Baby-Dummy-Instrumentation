@@ -165,10 +165,10 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
   sSendFlow->setValue("0");
   #endif  // AIR_FLOW_SENSOR
 
-  BlueToothCommunicator::sSend->start();
+  this->sSend->start();
 
   // Advertising
-  BlueToothCommunicator::pAdvertising = BLEDevice::getAdvertising();
+  this->pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SEND_UUID);
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x04);  // (0x06) functions that help with iPhone connections issue
