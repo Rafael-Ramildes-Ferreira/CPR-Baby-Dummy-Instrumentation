@@ -30,8 +30,9 @@ class ChestCompression{
     	unsigned int buffer_index;
 
     	double mean,deviation;
-    	double last_valley_time,last_peak_time;
+    	long int last_valley_time,last_peak_time;
 		double frequency;
+		long int frequency_update_time;
 	#endif
 
 		Adafruit_VL6180X dist_sensor;

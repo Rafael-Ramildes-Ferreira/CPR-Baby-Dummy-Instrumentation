@@ -7,6 +7,8 @@
 #ifdef FREQUENCY_ON_ESP
 #define DEVIATION_THRESHOLD (.03)
 #define MEAN_DIST_VALUE     (3.5)
+#define HOLD_TIME           (90)
+#define FREQ_DECRESE_SLOPE  (5e-3)
 #endif
 
 #define VL6180X_ADDR 0x29
@@ -80,6 +82,10 @@ double ChestCompression::calc_frequency(){
   this->last_peak();
   this->last_valley();
 
+  if(frequency_update_time + HOLD_TIME < millis() && this->frequency > 0){
+    this->frequency -= FREQ_DECRESE_SLOPE;
+  }
+
 	return this->frequency;
 }
 
@@ -146,6 +152,7 @@ double ChestCompression::update_frequency(){
 	double period = 2*abs(this->last_peak_time - this->last_valley_time);
 
 	this->frequency = 1e3/period;
+  this->frequency_update_time = millis();
 	return this->frequency;
 }
 
