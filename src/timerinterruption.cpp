@@ -2,7 +2,14 @@
 #include "main.h"
 
 
-ESP8266Timer TimerInterruption::ITimer;
+/**
+ * @brief Initiates timer interruption instance, and sets up configurations
+ * @param timer_instance: From TIMER_INSTANCES defgroup
+*/
+TimerInterruption::TimerInterruption(uint8_t timer_instance){
+    this->timer_cfg = timerBegin(TIMER_0, PRESCALOR, COUNT_UP);
+    timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
+}
 
 /**
  * @brief Sets a periadical timer interrupt to send the wireless messages
@@ -12,19 +19,18 @@ ESP8266Timer TimerInterruption::ITimer;
  * 			-1: Error
 */
 int TimerInterruption::set_timer_interrupt(void func(void)){
-	if(!TimerInterruption::ITimer.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, func)){
-		#ifdef DEBUG
-			Serial.println("ERROR: Periodical Wireless transmition failed");
-		#endif
-		return -1; 
-	}
+	timerAttachInterrupt(this->timer_cfg, func, EDGE);
+	timerAlarmEnable(this->timer_cfg);
 	#ifdef DEBUG
-	else {
-		Serial.print("Communication timer configured to ");
-		Serial.print(TIMER_INTERVAL_MS);
-		Serial.println(" msec");
-	}
+	Serial.println("Interrupt configured");
 	#endif
+	
 
 	return 0; // No error
 }
+
+
+// void TimerInterruption::ISR(void){
+//   digitalWrite(2,!digitalRead(2));
+//   request_to_send = true;
+// }
