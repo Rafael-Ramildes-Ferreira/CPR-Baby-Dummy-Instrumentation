@@ -7,7 +7,7 @@
 #ifdef FREQUENCY_ON_ESP
 #define DEVIATION_THRESHOLD (.03)
 #define MEAN_DIST_VALUE     (3.5)
-#define HOLD_TIME           (90)
+#define HOLD_TIME           (1000)
 #define FREQ_DECRESE_SLOPE  (5e-3)
 #endif
 
@@ -18,7 +18,8 @@ int ChestCompression::begin(){
 	this->dist_sensor = Adafruit_VL6180X(VL6180X_ADDR);
 
 #ifdef FREQUENCY_ON_ESP
-	this->last_valley_time = millis();
+	this->new_valley_time = millis();
+	this->last_peak_time = millis();
 	this->last_peak_time = millis();
 #endif
 
@@ -107,8 +108,9 @@ double ChestCompression::last_peak(){
 
       if(is_bigger){
           // Calculates the frequency between last peak (not the one found here) and last valley
-          if(last_peak_time < last_valley_time)
+          if(this->frequency_isOld){
             this->update_frequency();
+          }
           
           // Records the time in witch it happened          
           last_peak_time = millis();
@@ -133,26 +135,29 @@ double ChestCompression::last_valley(){
 
 			if(is_smaller){
         // Calculates the frequency between last peak and last valley (not the one found here)
-        if(last_peak_time > last_valley_time)
-          this->update_frequency();
+        if(this->last_peak_time > this->new_valley_time){
+          this->old_valley_time = this->new_valley_time;
+          this->frequency_isOld = true;
+        }
 
         // Records the time in witch it happened
-			  last_valley_time = millis();
+			  this->new_valley_time = millis();
 			} 
 		}
 	}
 
-		return last_valley_time;
+		return this->new_valley_time;
 }
 /**
  * @brief Calculates a new value of this->frequency based on sensor readings
  * @returns The calculated frequency
 */
 double ChestCompression::update_frequency(){
-	double period = 2*abs(this->last_peak_time - this->last_valley_time);
+	double period = this->new_valley_time - this->old_valley_time;
 
 	this->frequency = 1e3/period;
   this->frequency_update_time = millis();
+  this->frequency_isOld = false;
 	return this->frequency;
 }
 

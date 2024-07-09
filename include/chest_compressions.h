@@ -12,7 +12,7 @@
 
 class ChestCompression{
 	public:
-    	int begin();
+		int begin();
 		double calc_distance();
 		double get_distance();
 	#ifdef FREQUENCY_ON_ESP
@@ -27,10 +27,12 @@ class ChestCompression{
 		double update_frequency();
 
 		double readings[BUFFER_SIZE];
-    	unsigned int buffer_index;
+		unsigned int buffer_index;
 
-    	double mean,deviation;
-    	long int last_valley_time,last_peak_time;
+		double mean,deviation;
+		unsigned int new_valley_time, old_valley_time;
+		unsigned int last_peak_time;
+		bool frequency_isOld;
 		double frequency;
 		long int frequency_update_time;
 	#endif
