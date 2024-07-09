@@ -4,9 +4,10 @@
 #include <Adafruit_VL6180X.h>
 #include "buildconfig.h"
 
+#ifdef FREQUENCY_ON_ESP
 // Peak and valley finder algorithm configuration
-#define BUFFER_SIZE 		10
-#define DEVIATION_THRESHOLD	0.05
+#define BUFFER_SIZE	(3)
+#endif
 
 
 class ChestCompression{
@@ -29,8 +30,9 @@ class ChestCompression{
     	unsigned int buffer_index;
 
     	double mean,deviation;
-    	double last_valley_time,last_peak_time;
+    	long int last_valley_time,last_peak_time;
 		double frequency;
+		long int frequency_update_time;
 	#endif
 
 		Adafruit_VL6180X dist_sensor;
