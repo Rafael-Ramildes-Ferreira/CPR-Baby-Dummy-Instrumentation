@@ -14,6 +14,7 @@
 #include "air_flow.h"
 #include "chest_compressions.h"
 #include "soc/rtc_wdt.h"
+#include <stdio.h>
 
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
@@ -30,6 +31,7 @@ AirFlow air_flow;
 int i = 0;
 #endif
 
+extern char specs_bin;
 
 void setup() {
   rtc_wdt_feed();
@@ -67,6 +69,11 @@ void setup() {
 #ifdef DEBUG
   Serial.println("communicator->begin(chest,nullptr);//,&air_flow);");
 #endif
+
+  // printf("%s\n",&specs_bin);
+  Serial.println(&specs_bin);
+  while (1);
+  
 }
 
 void loop() {
