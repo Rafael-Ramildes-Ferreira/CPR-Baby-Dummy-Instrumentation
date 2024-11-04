@@ -14,6 +14,7 @@
 #include "air_flow.h"
 #include "chest_compressions.h"
 #include "soc/rtc_wdt.h"
+#include "r2u2.h"
 #include <stdio.h>
 
 
@@ -25,6 +26,7 @@ ChestCompression *chest;
 #ifdef AIR_FLOW_SENSOR
 AirFlow air_flow;
 #endif  // AIR_FLOW_SENSOR
+r2u2_monitor_t r2u2_monitor = R2U2_DEFAULT_MONITOR;
 
 #ifdef DEBUG
 // Debug
@@ -70,9 +72,8 @@ void setup() {
   Serial.println("communicator->begin(chest,nullptr);//,&air_flow);");
 #endif
 
-  // printf("%s\n",&specs_bin);
-  Serial.println(&specs_bin);
-  while (1);
+  // Starts the monitor
+
   
 }
 
