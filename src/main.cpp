@@ -33,7 +33,7 @@ r2u2_monitor_t r2u2_monitor = R2U2_DEFAULT_MONITOR;
 int i = 0;
 #endif
 
-extern char specs_bin;
+extern unsigned char specs_bin[];
 
 void setup() {
   rtc_wdt_feed();
@@ -73,7 +73,7 @@ void setup() {
 #endif
 
   // Starts the monitor
-
+  // r2u2_monitor.instruction_mem = &specs_bin;
   
 }
 
