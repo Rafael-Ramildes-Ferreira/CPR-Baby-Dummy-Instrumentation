@@ -6,7 +6,7 @@
  */
 
 /*.section .spec_file*/
-.section .data
+.section .rodata
 .global specs_bin
 
 specs_bin:

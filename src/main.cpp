@@ -15,6 +15,7 @@
 #include "chest_compressions.h"
 #include "soc/rtc_wdt.h"
 #include "r2u2.h"
+#include "rv_monitor.h"
 #include <stdio.h>
 
 
@@ -26,7 +27,7 @@ ChestCompression *chest;
 #ifdef AIR_FLOW_SENSOR
 AirFlow air_flow;
 #endif  // AIR_FLOW_SENSOR
-r2u2_monitor_t r2u2_monitor = R2U2_DEFAULT_MONITOR;
+r2u2_monitor_t r2u2_monitor = MONITOR_MEM_ALLOC;
 
 #ifdef DEBUG
 // Debug
@@ -73,7 +74,7 @@ void setup() {
 #endif
 
   // Starts the monitor
-  // r2u2_monitor.instruction_mem = &specs_bin;
+  r2u2_monitor.instruction_mem = &specs_bin;
   
 }
 
