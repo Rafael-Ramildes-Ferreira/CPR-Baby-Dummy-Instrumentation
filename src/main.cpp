@@ -27,14 +27,12 @@ ChestCompression *chest;
 #ifdef AIR_FLOW_SENSOR
 AirFlow air_flow;
 #endif  // AIR_FLOW_SENSOR
-r2u2_monitor_t r2u2_monitor = MONITOR_MEM_ALLOC;
+Runtime_Monitor monitor;
 
 #ifdef DEBUG
 // Debug
 int i = 0;
 #endif
-
-extern unsigned char specs_bin[];
 
 void setup() {
   rtc_wdt_feed();
@@ -50,9 +48,9 @@ void setup() {
 #endif
   
   chest = new ChestCompression();
-  if(!(chest->begin())){
-    error_handler();
-  }
+  // if(!(chest->begin())){
+  //   error_handler();
+  // }
 #ifdef DEBUG
   Serial.println("chest.begin()");
 #endif
@@ -74,7 +72,8 @@ void setup() {
 #endif
 
   // Starts the monitor
-  r2u2_monitor.instruction_mem = &specs_bin;
+  monitor.begin();
+  monitor.printInstr();
   
 }
 
@@ -83,12 +82,12 @@ void loop() {
 
   // Distance
   rtc_wdt_feed();
-  chest->calc_distance();
+  // chest->calc_distance();
 
   #ifdef DEBUG
   if(i%100 == 0){
-    Serial.print("\nDistance: ");
-    Serial.println(chest->get_distance());
+    // Serial.print("\nDistance: ");
+    // Serial.println(chest->get_distance());
   }
   #endif  // DEBUG
 
@@ -99,8 +98,8 @@ void loop() {
   
   #ifdef DEBUG
   if(i%100 == 0){
-    Serial.print("Frequency: ");
-    Serial.println(chest->get_frequency());
+    // Serial.print("Frequency: ");
+    // Serial.println(chest->get_frequency());
   }
   i++;
   #endif  // DEBUG 
