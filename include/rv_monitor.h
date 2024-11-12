@@ -2,7 +2,7 @@
 #define __RV_MONITOR_H
 
 
-#include "r2u2.h"
+#include <r2u2.h>
 
 
 /**
@@ -42,7 +42,7 @@
 class Runtime_Monitor{
   public:
     // Runtime_Monitor(void);
-    int begin(void);
+    r2u2_status_t begin(void);
     void printInstr(void);
 };
 #endif	//  __RV_MONITOR_H

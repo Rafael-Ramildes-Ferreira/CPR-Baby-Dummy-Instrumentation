@@ -72,7 +72,12 @@ void setup() {
 #endif
 
   // Starts the monitor
-  monitor.begin();
+  r2u2_status_t status = monitor.begin();
+  if(status != R2U2_OK){
+    printf("Monitor initialization falied: &d", status);
+    while (1);
+  }
+  Serial.println("monitor.begin()");
   monitor.printInstr();
   
 }
