@@ -10,5 +10,5 @@
 .global specs_bin
 
 specs_bin:
-	.incbin "./msg.txt"
+	.incbin "./r2u2_spec.bin"
 	.word 0

@@ -1,10 +1,14 @@
 #include "rv_monitor.h"
+
+#include "utils.h"
+
 #include <stdio.h>
+#include <string.h>
 
 
 extern unsigned char specs_bin[];
 
-r2u2_monitor_t r2u2_monitor_memory = MONITOR_MEM_ALLOC;
+r2u2_monitor_t r2u2_monitor_struct = MONITOR_MEM_ALLOC;
 
 r2u2_status_t print_verdict(r2u2_instruction_t instr, r2u2_verdict* res);
 
@@ -13,7 +17,7 @@ r2u2_status_t print_verdict(r2u2_instruction_t instr, r2u2_verdict* res);
 //  * 		I want it to be a const expresion
 //  */
 // Runtime_Monitor::Runtime_Monitor(){
-// 	r2u2_monitor_memory = MONITOR_MEM_ALLOC;
+// 	r2u2_monitor_struct = MONITOR_MEM_ALLOC;
 // }
 
 
@@ -23,25 +27,36 @@ r2u2_status_t print_verdict(r2u2_instruction_t instr, r2u2_verdict* res);
  * 					1 - Fault
  */
 r2u2_status_t Runtime_Monitor::begin(void){
-	r2u2_monitor_memory.instruction_mem = &specs_bin;
-	if(r2u2_monitor_memory.instruction_mem == NULL) {
+	r2u2_monitor_struct.instruction_mem = &specs_bin;
+	if(r2u2_monitor_struct.instruction_mem == NULL) {
 		perror("Cannot access specification file");
 		return R2U2_ERR_OTHER;
 	}
 
-	r2u2_monitor_memory.out_func = print_verdict;
-	if(r2u2_monitor_memory.out_func == NULL) {
+	r2u2_monitor_struct.out_func = print_verdict;
+	if(r2u2_monitor_struct.out_func == NULL) {
 		perror("Cannot assign output function");
 		return R2U2_ERR_OTHER;
 	}
 
-	return r2u2_init(&r2u2_monitor_memory);
+	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*1);	// To test a boolean input
+	r2u2_boxq_t *boxq = &(((r2u2_boxq_t*)(*(r2u2_monitor_struct.past_time_queue_mem)))[0]);
+	boxq->queue = (r2u2_boxq_intvl_t *) malloc(sizeof(r2u2_boxq_t)*1);	
+
+	return r2u2_init(&r2u2_monitor_struct);
+}
+
+r2u2_status_t Runtime_Monitor::tic(void){
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%d",1);
+	MY_DEBUG_PRINT("%s\n",(*(r2u2_monitor_struct.signal_vector))[0]);
+
+	return r2u2_tic(&r2u2_monitor_struct);
 }
 
 void Runtime_Monitor::printInstr(void){
 	printf("Test of monitor memory allocation\n");
-	printf("* Instr mem: %p\n",r2u2_monitor_memory.instruction_mem);
-	printf("* Data: %s\n",r2u2_monitor_memory.instruction_mem);
+	printf("* Instr mem: %p\n",r2u2_monitor_struct.instruction_mem);
+	printf("* Data: %s\n",r2u2_monitor_struct.instruction_mem);
 }
 
 r2u2_status_t print_verdict(r2u2_instruction_t instr, r2u2_verdict* res){

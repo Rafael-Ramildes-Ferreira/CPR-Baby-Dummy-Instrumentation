@@ -125,6 +125,8 @@ void loop() {
   #endif  // DEBUG
   #endif  // AIR_FLOW_SENSOR
 
+  monitor.tic();
+
   if(communicator->request_to_send)
   {
     rtc_wdt_feed();

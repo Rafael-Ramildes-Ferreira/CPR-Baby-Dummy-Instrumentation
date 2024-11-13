@@ -17,7 +17,7 @@
 #define rbNUM_OF_SIGNALS		    8
 #define rbNUM_OF_BZ_INSTRUCTION	26
 #define rbNUM_OF_AT_INSTRUCTION	1 // It cannot be zero :p
-#define rbNUN_OF_BOXQ_BYTES		  1 // It cannot be zero :p
+#define rbNUN_OF_BOXQ_BYTES		  16 // It cannot be zero :p
 #define rbNUN_OF_SCQ_BYTES		  146
 /**
  * @}
@@ -43,6 +43,7 @@ class Runtime_Monitor{
   public:
     // Runtime_Monitor(void);
     r2u2_status_t begin(void);
+    r2u2_status_t tic(void);
     void printInstr(void);
 };
 #endif	//  __RV_MONITOR_H
