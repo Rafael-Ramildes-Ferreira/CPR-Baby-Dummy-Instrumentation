@@ -1,0 +1,12 @@
+# FT
+
+O erro provavelmente está em memory/shared_connection_queue::r2u2_scq_push(r2u2_scq_t *scq, r2u2_verdict *res)
+-> (scq->queue)[-((ptrdiff_t)scq->wr_ptr)].truth
+
+Parece que o erro é no ponteiro squ->queue (monitor->future_time_queue_mem->queue), ele é alocado mas depois quando 
+eu tento acessar ele tenta acessar ele dentro de funções ele tenta usar um ponteiro errado.
+
+# PT
+
+Roda sem referenciar nullptr, mas só resulta em falso.
+O intervalo não parece estar funcionando -> Checar como ele está lidando com o tempo
