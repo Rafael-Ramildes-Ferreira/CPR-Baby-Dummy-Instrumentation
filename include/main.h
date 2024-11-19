@@ -3,6 +3,8 @@
 
 #include "buildconfig.h"
 
+#define MY_DEBUG_PRINT(...) do{ printf(__VA_ARGS__ ); } while( false )
+
 /* Exported functions */
 void error_handler();
 

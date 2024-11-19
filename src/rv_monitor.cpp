@@ -44,15 +44,12 @@ r2u2_status_t Runtime_Monitor::begin(void){
 	boxq->queue = (r2u2_boxq_intvl_t *) malloc(sizeof(r2u2_boxq_intvl_t)*1);
 	r2u2_scq_t *scq = &(((r2u2_scq_t*)(*(r2u2_monitor_struct.future_time_queue_mem)))[0]);
 	scq->queue = (r2u2_verdict *) malloc(sizeof(r2u2_verdict)*1);
-	MY_DEBUG_PRINT("ESTOU CONFIGURANDO scq->queue PARA %p\n scq: %p\n",scq->queue, scq);
 
 	return r2u2_init(&r2u2_monitor_struct);
 }
 
 r2u2_status_t Runtime_Monitor::tic(void){
 	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%d\0",1);
-	MY_DEBUG_PRINT("(*(r2u2_monitor_struct.signal_vector))[0]: %s\n",(*(r2u2_monitor_struct.signal_vector))[0]);
-	MY_DEBUG_PRINT("*((*(r2u2_monitor_struct.signal_vector))[0]): %d\n",*((char*)(*(r2u2_monitor_struct.signal_vector))[0]));
 
 	return r2u2_tic(&r2u2_monitor_struct);
 }
