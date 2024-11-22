@@ -11,5 +11,4 @@
 
 specs_bin:
 	.incbin "./r2u2_spec2.bin"
-	;.word 294
-	.word 364
+	.word 544

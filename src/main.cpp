@@ -7,6 +7,11 @@
  * 71:  }
  * 
  * from .pio\libdeps\nodemcu-32s\Adafruit_VL6180X\Adafruit_VL6180X.cpp
+ * 
+ * You also need to add change:
+ * - boxq->queue = &(elements[(R2U2_MAX_BOXQ_BYTES / sizeof(r2u2_boxq_intvl_t)) - instr->memory_reference]);
+ * + boxq->queue = &(elements[(rbNUN_OF_BOXQ_BYTES / sizeof(r2u2_boxq_intvl_t)) - instr->memory_reference]);
+ * in `past_time.c` (change the define to the configured value, as it not visible from that file)
 */
 #include "buildconfig.h"
 #include "main.h"
@@ -18,6 +23,8 @@
 #include "rv_monitor.h"
 #include <stdio.h>
 
+
+#define PADDING {0,0,0,0}
 
 // Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 BlueToothCommunicator *communicator;
@@ -33,6 +40,21 @@ Runtime_Monitor monitor;
 // Debug
 int i = 0;
 #endif
+
+void print_mem(void * obj, size_t size){
+  int i = 0;
+  while(i < size){
+    printf("%02X|\t", i);
+    for(int j = 0; j < 16; j++){
+      if(i+j < size)
+        printf("%02X ", ((uint8_t*)obj)[i+j]);
+      else
+        break;
+    }
+    printf("\n");
+    i += 16;
+  }
+}
 
 void setup() {
   rtc_wdt_feed();
@@ -90,21 +112,23 @@ void loop() {
   // chest->calc_distance();
 
   #ifdef DEBUG
-  if(i%100 == 0){
+  // if(i%100 == 0){
     // Serial.print("\nDistance: ");
     // Serial.println(chest->get_distance());
-  }
+  // }
   #endif  // DEBUG
 
   #ifdef FREQUENCY_ON_ESP
   // Frequency
   rtc_wdt_feed();
-  chest->calc_frequency();  
+  // chest->calc_frequency();
   
   #ifdef DEBUG
   if(i%100 == 0){
-    // Serial.print("Frequency: ");
+    // printf("Frequency: \n");
     // Serial.println(chest->get_frequency());
+    monitor.tic();
+    // while(1);
   }
   i++;
   #endif  // DEBUG 
@@ -125,7 +149,6 @@ void loop() {
   #endif  // DEBUG
   #endif  // AIR_FLOW_SENSOR
 
-  monitor.tic();
 
   if(communicator->request_to_send)
   {

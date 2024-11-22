@@ -16,8 +16,8 @@
 #define rbNUM_OF_INTRUCTIONS 	  41 // ft + bz
 #define rbNUM_OF_SIGNALS		    8
 #define rbNUM_OF_BZ_INSTRUCTION	26
-#define rbNUM_OF_AT_INSTRUCTION	1 // It cannot be zero :p
-#define rbNUN_OF_BOXQ_BYTES		  16 // It cannot be zero :p
+#define rbNUM_OF_AT_INSTRUCTION	1
+#define rbNUN_OF_BOXQ_BYTES		  128*8 // 8 is the size of the structure tha this will be casted as
 #define rbNUN_OF_SCQ_BYTES		  146
 /**
  * @}

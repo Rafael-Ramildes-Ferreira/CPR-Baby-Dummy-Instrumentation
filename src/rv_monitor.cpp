@@ -39,17 +39,18 @@ r2u2_status_t Runtime_Monitor::begin(void){
 		return R2U2_ERR_OTHER;
 	}
 
-	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*1);	// To test a boolean input
-	r2u2_boxq_t *boxq = &(((r2u2_boxq_t*)(*(r2u2_monitor_struct.past_time_queue_mem)))[0]);
-	boxq->queue = (r2u2_boxq_intvl_t *) malloc(sizeof(r2u2_boxq_intvl_t)*1);
-	r2u2_scq_t *scq = &(((r2u2_scq_t*)(*(r2u2_monitor_struct.future_time_queue_mem)))[0]);
-	scq->queue = (r2u2_verdict *) malloc(sizeof(r2u2_verdict)*1);
+	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*1);
+	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*1);
 
 	return r2u2_init(&r2u2_monitor_struct);
 }
 
 r2u2_status_t Runtime_Monitor::tic(void){
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%d\0",1);
+	static float x = 0.0;
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%d,\n",1);
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%d,\n",0);
+
+	x = x + 1;
 
 	return r2u2_tic(&r2u2_monitor_struct);
 }
