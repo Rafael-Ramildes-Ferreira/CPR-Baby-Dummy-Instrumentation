@@ -1,5 +1,7 @@
 #include "rv_monitor.h"
 
+#include "engines/mltl/mltl.h"
+
 #include "utils.h"
 
 #include <stdio.h>
@@ -47,10 +49,10 @@ r2u2_status_t Runtime_Monitor::begin(void){
 
 r2u2_status_t Runtime_Monitor::tic(void){
 	static float x = 0.0;
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%d,\n",1);
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%d,\n",0);
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%f,\n",x);
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%f,\n",x);
 
-	x = x + 1;
+	x = ((int)(x + 1.0))%10;
 
 	return r2u2_tic(&r2u2_monitor_struct);
 }
@@ -62,7 +64,7 @@ void Runtime_Monitor::printInstr(void){
 }
 
 r2u2_status_t print_verdict(r2u2_instruction_t instr, r2u2_verdict* res){
-	printf("%d:%u,%s\n", instr.engine_tag, res->time, res->truth ? "T" : "F");
+	printf("%d:%u,%s\n", ((r2u2_mltl_instruction_t*)instr.instruction_data)->op2.value, res->time, res->truth ? "T" : "F");
 
 	return R2U2_OK;
 }
