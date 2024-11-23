@@ -8,10 +8,12 @@
  * 
  * from .pio\libdeps\nodemcu-32s\Adafruit_VL6180X\Adafruit_VL6180X.cpp
  * 
- * You also need to add change:
+ * ATTENTION: You need to make a fill changes for R2U2 to work
+ * Add paddings to the structs
+ * You also need to change cases like the following:
  * - boxq->queue = &(elements[(R2U2_MAX_BOXQ_BYTES / sizeof(r2u2_boxq_intvl_t)) - instr->memory_reference]);
- * + boxq->queue = &(elements[(rbNUN_OF_BOXQ_BYTES / sizeof(r2u2_boxq_intvl_t)) - instr->memory_reference]);
- * in `past_time.c` (change the define to the configured value, as it not visible from that file)
+ * + boxq->queue = &(elements[(NUN_OF_BOXQ_BYTES / sizeof(r2u2_boxq_intvl_t)) - instr->memory_reference]);
+ * in `past_time.c` (add the define to the library)
 */
 #include "buildconfig.h"
 #include "main.h"
@@ -22,7 +24,6 @@
 #include "r2u2.h"
 #include "rv_monitor.h"
 #include <stdio.h>
-
 
 #define PADDING {0,0,0,0}
 
