@@ -41,16 +41,16 @@ r2u2_status_t Runtime_Monitor::begin(void){
 		return R2U2_ERR_OTHER;
 	}
 
-	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*1);
-	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*1);
+	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*8);
+	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*8);
 
 	return r2u2_init(&r2u2_monitor_struct);
 }
 
 r2u2_status_t Runtime_Monitor::tic(void){
 	static float x = 0.0;
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%f,\n",x);
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%f,\n",x);
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%8.f,\n",x);
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%8.f,\n",x);
 
 	x = ((int)(x + 1.0))%10;
 

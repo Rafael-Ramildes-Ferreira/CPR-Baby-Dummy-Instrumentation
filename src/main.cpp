@@ -121,7 +121,7 @@ void loop() {
 
   #ifdef FREQUENCY_ON_ESP
   // Frequency
-  rtc_wdt_feed();
+  // rtc_wdt_feed();
   // chest->calc_frequency();
   
   #ifdef DEBUG
@@ -150,11 +150,12 @@ void loop() {
   #endif  // DEBUG
   #endif  // AIR_FLOW_SENSOR
 
-
   if(communicator->request_to_send)
   {
+    printf("sending...\n");
     rtc_wdt_feed();
     communicator->update();
+    printf("Sent!!\n");
   }
 }
 
