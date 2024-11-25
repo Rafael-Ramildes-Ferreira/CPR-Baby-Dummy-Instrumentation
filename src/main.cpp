@@ -45,6 +45,8 @@ void request_trace(void);
 
 bool trace_requested = false;
 long int monitor_timeStamp = -1;
+bool data_sent = false;
+double value = 0.0;
 
 
 void setup() {
@@ -126,14 +128,21 @@ void loop() {
 
 
   /* Trace data export */
-  #ifdef DEBUG
   if(trace_requested){
     monitor_timeStamp++;
 
     trace_requested = false;
 
+    monitor.update_float_signal(0,value);
+    // value = air_flow.get_flow();
+    value = chest->get_distance();
+    monitor.update_float_signal(1,value);
+    monitor.update_bool_signal(2,data_sent);
+    data_sent = false;
     monitor.tic();
+    printf("----------");
     
+    #ifdef DEBUG
     #ifdef DISTANCE_SENSOR
     printf("\n[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
     #endif  // DISTANCE_SENSOR
@@ -145,16 +154,19 @@ void loop() {
     #ifdef AIR_FLOW_SENSOR
     printf("[%d] Air_flow: %lf\n",monitor_timeStamp, air_flow.get_flow());
     #endif  // AIR_FLOW_SENSOR
+    #endif  // DEBUG
   }
-  #endif  // DEBUG
 
 
   /* Wireless comunication */
   if(communicator->request_to_send)
   {
+    data_sent = true;
     rtc_wdt_feed();
     communicator->update();
+    #ifdef DEBUG
     printf("[%d] Request_To_Send\n",monitor_timeStamp);
+    #endif  // DEBUG
   }
 }
 

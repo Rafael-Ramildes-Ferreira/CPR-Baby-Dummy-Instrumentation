@@ -43,21 +43,22 @@ r2u2_status_t Runtime_Monitor::begin(void){
 
 	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*8);
 	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*8);
+	(*(r2u2_monitor_struct.signal_vector))[2] = malloc(sizeof(char)*1);
 
 	return r2u2_init(&r2u2_monitor_struct);
 	// return R2U2_OK;
 }
 
+void Runtime_Monitor::update_float_signal(uint8_t index,float value){
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[index]),"%8.6f,\n",value);
+}
+
+void Runtime_Monitor::update_bool_signal(uint8_t index,bool value){
+	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[index]),"%d,\n",value);
+}
+
 r2u2_status_t Runtime_Monitor::tic(void){
-	static float x = 0.0;
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[0]),"%8.f,\n",x);
-	sprintf((char*)((*(r2u2_monitor_struct.signal_vector))[1]),"%8.f,\n",x);
-
-	x = ((int)(x + 1.0))%10;
-
-	printf("X: %f\n",x);
 	return r2u2_tic(&r2u2_monitor_struct);
-	// return R2U2_OK;
 }
 
 void Runtime_Monitor::printInstr(void){

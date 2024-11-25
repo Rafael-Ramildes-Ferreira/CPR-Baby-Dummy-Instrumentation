@@ -27,6 +27,8 @@ class Runtime_Monitor{
     // Runtime_Monitor(void);
     r2u2_status_t begin(void);
     r2u2_status_t tic(void);
+    void update_float_signal(uint8_t index,float value);
+    void update_bool_signal(uint8_t index,bool value);
     void printInstr(void);
 };
 #endif	//  __RV_MONITOR_H

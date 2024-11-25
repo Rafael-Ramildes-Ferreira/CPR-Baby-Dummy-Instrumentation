@@ -2,9 +2,9 @@
 #define _BUILDCONFIG_H
 
 #define DEBUG
-#ifdef DEBUG
+// #ifdef DEBUG
 #include <Arduino.h>
-#endif
+// #endif
 
 #define DISTANCE_SENSOR
 // #define FREQUENCY_ON_ESP
