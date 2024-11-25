@@ -181,7 +181,7 @@ int BlueToothCommunicator::begin(ChestCompression *chest, AirFlow *air_flow){
   #endif
 
 	// Configures the periodically routine in which messages are sent
-	this->timer_it.set_timer_interrupt(&BlueToothCommunicator::ISR);
+	this->timer_it.set_timer_interrupt(BlueToothCommunicator::ISR);
 
   pinMode(2,OUTPUT);
   Serial.println("Tudo configurado");
@@ -241,13 +241,13 @@ void BlueToothCommunicator::update(){
   #endif  // AIR_FLOW_SENSOR
 
 #ifdef DEBUG
-    Serial.print(".");
+    // Serial.print(".");
 #endif
 
   BlueToothCommunicator::request_to_send = false;
 }
 
-void BlueToothCommunicator::ISR(void){
+void IRAM_ATTR BlueToothCommunicator::ISR(void){
   if(BlueToothCommunicator::conected == true){
     digitalWrite(2,!digitalRead(2));
     BlueToothCommunicator::request_to_send = true;

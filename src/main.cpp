@@ -13,6 +13,7 @@
 #include "wireless.h"
 #include "air_flow.h"
 #include "chest_compressions.h"
+#include "timerinterruption.h"
 #include "soc/rtc_wdt.h"
 
 
@@ -25,10 +26,13 @@ ChestCompression *chest;
 AirFlow air_flow;
 #endif  // AIR_FLOW_SENSOR
 
-#ifdef DEBUG
-// Debug
-int i = 0;
-#endif
+TimerInterruption trace_export(TIMER_3,30);
+
+void request_trace(void);
+
+
+bool trace_requested = false;
+unsigned int monitor_timeStamp = 0;
 
 
 void setup() {
@@ -66,6 +70,11 @@ void setup() {
 #ifdef DEBUG
   Serial.println("new BlueToothCommunicator();");
 #endif
+
+  trace_export.set_timer_interrupt(request_trace);
+#ifdef DEBUG
+  Serial.println("trace_export.set_timer_interrupt(request_trace);");
+#endif
   
   communicator->begin(AVAILABLE_SENSORS);
 #ifdef DEBUG
@@ -80,24 +89,10 @@ void loop() {
   rtc_wdt_feed();
   chest->calc_distance();
 
-  #ifdef DEBUG
-  if(i%100 == 0){
-    Serial.print("\nDistance: ");
-    Serial.println(chest->get_distance());
-  }
-  #endif  // DEBUG
-
   #ifdef FREQUENCY_ON_ESP
   // Frequency
   rtc_wdt_feed();
   chest->calc_frequency();  
-  
-  #ifdef DEBUG
-  if(i%100 == 0){
-    Serial.print("Frequency: ");
-    Serial.println(chest->get_frequency());
-  }
-  #endif  // DEBUG 
   #endif  // FREQUENCY_ON_ESP
 
   #endif  // DISTANCE_SENSOR
@@ -106,22 +101,37 @@ void loop() {
   #ifdef AIR_FLOW_SENSOR
   rtc_wdt_feed();
   air_flow.readFlow();
+  #endif  // AIR_FLOW_SENSOR
 
   #ifdef DEBUG
-  if(i%100 == 0){
-    Serial.print("Air flow: ");
-    Serial.println(air_flow.get_flow());
+  if(trace_requested){
+    trace_requested = false;
+    
+  #ifdef DISTANCE_SENSOR
+    printf("\n[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
+  #endif  // DISTANCE_SENSOR
+    
+  #ifdef FREQUENCY_ON_ESP
+    printf("[%d] Frequency: %lf\n",monitor_timeStamp,chest->get_frequency());
+  #endif  // FREQUENCY_ON_ESP
+
+  #ifdef AIR_FLOW_SENSOR
+    printf("[%d] Air_flow: %lf\n",monitor_timeStamp, air_flow.get_flow());
+  #endif  // AIR_FLOW_SENSOR
   }
   #endif  // DEBUG
-  #endif  // AIR_FLOW_SENSOR
 
   if(communicator->request_to_send)
   {
     rtc_wdt_feed();
     communicator->update();
+    printf("[%d] Request_To_Send\n",monitor_timeStamp);
   }
+}
 
-  i++;
+
+void IRAM_ATTR request_trace(void){
+  trace_requested = true;
 }
 
 
