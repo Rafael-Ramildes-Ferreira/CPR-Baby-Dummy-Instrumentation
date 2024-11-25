@@ -23,7 +23,7 @@ int AirFlow::begin()
  */
 double AirFlow::readFlow()
 {
-	this->flow = flowSensor->readFlow();
+	// this->flow = flowSensor->readFlow();
 	return this->flow;
 }
 
