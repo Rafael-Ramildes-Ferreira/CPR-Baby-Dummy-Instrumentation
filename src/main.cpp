@@ -20,6 +20,7 @@
 #include "wireless.h"
 #include "air_flow.h"
 #include "chest_compressions.h"
+#include "timerinterruption.h"
 #include "soc/rtc_wdt.h"
 #include "r2u2.h"
 #include "rv_monitor.h"
@@ -37,25 +38,14 @@ AirFlow air_flow;
 #endif  // AIR_FLOW_SENSOR
 Runtime_Monitor monitor;
 
-#ifdef DEBUG
-// Debug
-int i = 0;
-#endif
+TimerInterruption trace_export(TIMER_3,30);
 
-void print_mem(void * obj, size_t size){
-  int i = 0;
-  while(i < size){
-    printf("%02X|\t", i);
-    for(int j = 0; j < 16; j++){
-      if(i+j < size)
-        printf("%02X ", ((uint8_t*)obj)[i+j]);
-      else
-        break;
-    }
-    printf("\n");
-    i += 16;
-  }
-}
+void request_trace(void);
+
+
+bool trace_requested = false;
+long int monitor_timeStamp = -1;
+
 
 void setup() {
   rtc_wdt_feed();
@@ -70,28 +60,37 @@ void setup() {
   Serial.println("Começando");
 #endif
   
+  #ifdef DISTANCE_SENSOR
   chest = new ChestCompression();
+  chest->begin();
   // if(!(chest->begin())){
   //   error_handler();
   // }
 #ifdef DEBUG
   Serial.println("chest.begin()");
 #endif
+  #endif
 
-  // air_flow.begin();
+  #ifdef AIR_FLOW_SENSOR
+  air_flow.begin();
 #ifdef DEBUG
-  // Serial.println("air_flow.begin();");
+  Serial.println("air_flow.begin();");
 #endif
+  #endif
 
   communicator = new BlueToothCommunicator();
 #ifdef DEBUG
   Serial.println("new BlueToothCommunicator();");
 #endif
-  
-  // communicator->begin(nullptr,nullptr);
-  communicator->begin(chest,nullptr);//,&air_flow);
+
+  trace_export.set_timer_interrupt(request_trace);
 #ifdef DEBUG
-  Serial.println("communicator->begin(chest,nullptr);//,&air_flow);");
+  Serial.println("trace_export.set_timer_interrupt(request_trace);");
+#endif
+  
+  communicator->begin(AVAILABLE_SENSORS);
+#ifdef DEBUG
+  Serial.println("communicator->begin(AVAILABLE_SENSORS);");
 #endif
 
   // Starts the monitor
@@ -106,55 +105,62 @@ void setup() {
 }
 
 void loop() {
+  /* Sensors read */
   #ifdef DISTANCE_SENSOR
-
   // Distance
   rtc_wdt_feed();
-  // chest->calc_distance();
-
-  #ifdef DEBUG
-  // if(i%100 == 0){
-    // Serial.print("\nDistance: ");
-    // Serial.println(chest->get_distance());
-  // }
-  #endif  // DEBUG
+  chest->calc_distance();
+  #endif  // DISTANCE_SENSOR
 
   #ifdef FREQUENCY_ON_ESP
   // Frequency
-  // rtc_wdt_feed();
-  // chest->calc_frequency();
-  
-  #ifdef DEBUG
-  if(i%100 == 0){
-    // printf("Frequency: \n");
-    // Serial.println(chest->get_frequency());
-    monitor.tic();
-    // while(1);
-  }
-  i++;
-  #endif  // DEBUG 
+  rtc_wdt_feed();
+  chest->calc_frequency();  
   #endif  // FREQUENCY_ON_ESP
-
-  #endif  // DISTANCE_SENSOR
   
   // Air Flow
   #ifdef AIR_FLOW_SENSOR
   rtc_wdt_feed();
   air_flow.readFlow();
-
-  #ifdef DEBUG
-  if(i%100 == 0){
-    Serial.print("Air flow: ");
-    Serial.println(air_flow.get_flow());
-  }
-  #endif  // DEBUG
   #endif  // AIR_FLOW_SENSOR
 
+
+  /* Trace data export */
+  #ifdef DEBUG
+  if(trace_requested){
+    monitor_timeStamp++;
+
+    trace_requested = false;
+
+    monitor.tic();
+    
+    #ifdef DISTANCE_SENSOR
+    printf("\n[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
+    #endif  // DISTANCE_SENSOR
+    
+    #ifdef FREQUENCY_ON_ESP
+    printf("[%d] Frequency: %lf\n",monitor_timeStamp,chest->get_frequency());
+    #endif  // FREQUENCY_ON_ESP
+
+    #ifdef AIR_FLOW_SENSOR
+    printf("[%d] Air_flow: %lf\n",monitor_timeStamp, air_flow.get_flow());
+    #endif  // AIR_FLOW_SENSOR
+  }
+  #endif  // DEBUG
+
+
+  /* Wireless comunication */
   if(communicator->request_to_send)
   {
     rtc_wdt_feed();
     communicator->update();
+    printf("[%d] Request_To_Send\n",monitor_timeStamp);
   }
+}
+
+
+void IRAM_ATTR request_trace(void){
+  trace_requested = true;
 }
 
 

@@ -7,7 +7,18 @@
  * @param timer_instance: From TIMER_INSTANCES defgroup
 */
 TimerInterruption::TimerInterruption(uint8_t timer_instance){
-    this->timer_cfg = timerBegin(TIMER_0, PRESCALOR, COUNT_UP);
+    this->timer_cfg = timerBegin(timer_instance, PRESCALOR(TIMER_INTERVAL_MS), COUNT_UP);
+    timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
+}
+
+
+/**
+ * @brief Initiates timer interruption instance, and sets up configurations
+ * @param timer_instance: From TIMER_INSTANCES defgroup
+ * @param period_ms: Interrupt period in milliseconds
+*/
+TimerInterruption::TimerInterruption(uint8_t timer_instance,uint16_t period_ms){
+    this->timer_cfg = timerBegin(timer_instance, PRESCALOR(period_ms), COUNT_UP);
     timerAlarmWrite(this->timer_cfg, PRELOAD, AUTO_RELOAD);
 }
 
