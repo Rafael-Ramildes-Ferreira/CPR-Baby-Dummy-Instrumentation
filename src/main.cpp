@@ -32,7 +32,7 @@ void request_trace(void);
 
 
 bool trace_requested = false;
-unsigned int monitor_timeStamp = 0;
+long int monitor_timeStamp = -1;
 
 
 void setup() {
@@ -83,19 +83,18 @@ void setup() {
 }
 
 void loop() {
+  /* Sensors read */
   #ifdef DISTANCE_SENSOR
-
   // Distance
   rtc_wdt_feed();
   chest->calc_distance();
+  #endif  // DISTANCE_SENSOR
 
   #ifdef FREQUENCY_ON_ESP
   // Frequency
   rtc_wdt_feed();
   chest->calc_frequency();  
   #endif  // FREQUENCY_ON_ESP
-
-  #endif  // DISTANCE_SENSOR
   
   // Air Flow
   #ifdef AIR_FLOW_SENSOR
@@ -103,24 +102,30 @@ void loop() {
   air_flow.readFlow();
   #endif  // AIR_FLOW_SENSOR
 
+
+  /* Trace data export */
   #ifdef DEBUG
   if(trace_requested){
+    monitor_timeStamp++;
+
     trace_requested = false;
     
-  #ifdef DISTANCE_SENSOR
+    #ifdef DISTANCE_SENSOR
     printf("\n[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
-  #endif  // DISTANCE_SENSOR
+    #endif  // DISTANCE_SENSOR
     
-  #ifdef FREQUENCY_ON_ESP
+    #ifdef FREQUENCY_ON_ESP
     printf("[%d] Frequency: %lf\n",monitor_timeStamp,chest->get_frequency());
-  #endif  // FREQUENCY_ON_ESP
+    #endif  // FREQUENCY_ON_ESP
 
-  #ifdef AIR_FLOW_SENSOR
+    #ifdef AIR_FLOW_SENSOR
     printf("[%d] Air_flow: %lf\n",monitor_timeStamp, air_flow.get_flow());
-  #endif  // AIR_FLOW_SENSOR
+    #endif  // AIR_FLOW_SENSOR
   }
   #endif  // DEBUG
 
+
+  /* Wireless comunication */
   if(communicator->request_to_send)
   {
     rtc_wdt_feed();

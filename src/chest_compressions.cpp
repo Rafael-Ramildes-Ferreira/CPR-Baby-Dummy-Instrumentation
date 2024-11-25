@@ -56,8 +56,8 @@ double ChestCompression::calc_distance(){
     #endif  // FREQUENCY_ON_ESP
   } else {
 		#ifdef DEBUG
-			Serial.print("Distance sensor Error Code: ");
-			Serial.println(dist_sensor.readRangeStatus());
+			// Serial.print("Distance sensor Error Code: ");
+			// Serial.println(dist_sensor.readRangeStatus());
 		#endif
 	}
 

@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #endif
 
-// #define DISTANCE_SENSOR
+#define DISTANCE_SENSOR
 // #define FREQUENCY_ON_ESP
 #define AIR_FLOW_SENSOR
 
