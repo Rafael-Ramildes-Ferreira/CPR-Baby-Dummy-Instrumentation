@@ -47,11 +47,12 @@
  * @brief	Holds the variables that define the interruption interval
  * @{
 */
-#define TIMER_FREQUENCY		(80e6)	// 80MHz
-#define TIMER_INTERVAL_MS	(100)
-#define TIMER_INTERVAL_S	((float) TIMER_INTERVAL_MS*1e-3)
-#define PRELOAD				(1000)
-#define PRESCALOR			((uint16_t)(TIMER_INTERVAL_S*TIMER_FREQUENCY/PRELOAD))
+#define TIMER_FREQUENCY			(80e6)	// 80MHz
+#define TIMER_INTERVAL_MS		(100)
+#define TIMER_INTERVAL_S		((float) TIMER_INTERVAL_MS*1e-3)
+#define PRELOAD					(1000)
+// #define PRESCALOR				((uint16_t)(TIMER_INTERVAL_S*TIMER_FREQUENCY/PRELOAD))
+#define PRESCALOR(period_ms)	((uint16_t)(((float)period_ms*1e-3)*TIMER_FREQUENCY/PRELOAD))
 /**
  * @}
 */
@@ -75,6 +76,7 @@
 class TimerInterruption{
 	public:
 		TimerInterruption(uint8_t timer_instance);
+		TimerInterruption(uint8_t timer_instance,uint16_t period_ms);
 		int set_timer_interrupt(void func(void));
 		// void ISR(void);
 	private:
