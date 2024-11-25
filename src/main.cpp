@@ -44,28 +44,32 @@ void setup() {
   Serial.println("Começando");
 #endif
   
+  #ifdef DISTANCE_SENSOR
   chest = new ChestCompression();
-  if(!(chest->begin())){
-    error_handler();
-  }
+  chest->begin();
+  // if(!(chest->begin())){
+  //   error_handler();
+  // }
 #ifdef DEBUG
   Serial.println("chest.begin()");
 #endif
+  #endif
 
-  // air_flow.begin();
+  #ifdef AIR_FLOW_SENSOR
+  air_flow.begin();
 #ifdef DEBUG
-  // Serial.println("air_flow.begin();");
+  Serial.println("air_flow.begin();");
 #endif
+  #endif
 
   communicator = new BlueToothCommunicator();
 #ifdef DEBUG
   Serial.println("new BlueToothCommunicator();");
 #endif
   
-  // communicator->begin(nullptr,nullptr);
-  communicator->begin(chest,nullptr);//,&air_flow);
+  communicator->begin(AVAILABLE_SENSORS);
 #ifdef DEBUG
-  Serial.println("communicator->begin(chest,nullptr);//,&air_flow);");
+  Serial.println("communicator->begin(AVAILABLE_SENSORS);");
 #endif
 }
 
@@ -93,7 +97,6 @@ void loop() {
     Serial.print("Frequency: ");
     Serial.println(chest->get_frequency());
   }
-  i++;
   #endif  // DEBUG 
   #endif  // FREQUENCY_ON_ESP
 
@@ -117,6 +120,8 @@ void loop() {
     rtc_wdt_feed();
     communicator->update();
   }
+
+  i++;
 }
 
 
