@@ -43,7 +43,9 @@ r2u2_status_t Runtime_Monitor::begin(void){
 
 	(*(r2u2_monitor_struct.signal_vector))[0] = malloc(sizeof(char)*8);
 	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*8);
-	(*(r2u2_monitor_struct.signal_vector))[2] = malloc(sizeof(char)*1);
+	(*(r2u2_monitor_struct.signal_vector))[2] = malloc(sizeof(char)*8);
+	(*(r2u2_monitor_struct.signal_vector))[3] = malloc(sizeof(char)*8);
+	(*(r2u2_monitor_struct.signal_vector))[4] = malloc(sizeof(char)*1);
 
 	return r2u2_init(&r2u2_monitor_struct);
 	// return R2U2_OK;

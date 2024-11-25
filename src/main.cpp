@@ -46,7 +46,8 @@ void request_trace(void);
 bool trace_requested = false;
 long int monitor_timeStamp = -1;
 bool data_sent = false;
-double value = 0.0;
+double distance = 0.0;
+double air = 0.0;
 
 
 void setup() {
@@ -133,11 +134,13 @@ void loop() {
 
     trace_requested = false;
 
-    monitor.update_float_signal(0,value);
-    // value = air_flow.get_flow();
-    value = chest->get_distance();
-    monitor.update_float_signal(1,value);
-    monitor.update_bool_signal(2,data_sent);
+    monitor.update_float_signal(0,distance);
+    distance = chest->get_distance();
+    monitor.update_float_signal(1,distance);
+    monitor.update_float_signal(2,air);
+    air = air_flow.get_flow();
+    monitor.update_float_signal(3,air);
+    monitor.update_bool_signal(4,data_sent);
     data_sent = false;
     monitor.tic();
     printf("----------");
