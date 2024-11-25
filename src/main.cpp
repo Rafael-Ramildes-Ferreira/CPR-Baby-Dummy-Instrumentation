@@ -152,10 +152,8 @@ void loop() {
 
   if(communicator->request_to_send)
   {
-    printf("sending...\n");
     rtc_wdt_feed();
     communicator->update();
-    printf("Sent!!\n");
   }
 }
 

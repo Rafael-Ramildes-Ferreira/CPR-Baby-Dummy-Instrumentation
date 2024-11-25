@@ -45,6 +45,7 @@ r2u2_status_t Runtime_Monitor::begin(void){
 	(*(r2u2_monitor_struct.signal_vector))[1] = malloc(sizeof(char)*8);
 
 	return r2u2_init(&r2u2_monitor_struct);
+	// return R2U2_OK;
 }
 
 r2u2_status_t Runtime_Monitor::tic(void){
@@ -54,7 +55,9 @@ r2u2_status_t Runtime_Monitor::tic(void){
 
 	x = ((int)(x + 1.0))%10;
 
+	printf("X: %f\n",x);
 	return r2u2_tic(&r2u2_monitor_struct);
+	// return R2U2_OK;
 }
 
 void Runtime_Monitor::printInstr(void){

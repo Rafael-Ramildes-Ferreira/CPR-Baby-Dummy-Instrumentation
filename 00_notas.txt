@@ -1,0 +1,2 @@
+-(ptrdiff_t)boxq->tail era pra dar menor que zero para indexar boxq->queue, mas está dando positivo, o que dá LoadProhibited.
+O próprio endereço de boxq->queue está dando errado.
