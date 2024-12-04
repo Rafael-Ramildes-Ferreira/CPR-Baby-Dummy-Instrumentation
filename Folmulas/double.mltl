@@ -1,0 +1,11 @@
+
+INPUT
+	last_dist: float;
+	last_air: float;
+	dist: float;
+	air: float;
+	send: bool;
+
+PTSPEC
+	req0 : send => O[0,3] (dist != last_dist);
+	req1 : send => O[0,3] (air != last_air);

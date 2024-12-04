@@ -1,0 +1,8 @@
+
+INPUT
+	s0: float;
+	s1: float;
+	s2: bool;
+
+PTSPEC
+	req0 : s2 => O[0,3] (s0 != s1);

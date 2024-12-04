@@ -1,6 +1,5 @@
 #include "buildconfig.h"
 
-#ifdef AIR_FLOW_SENSOR
 #include "air_flow.h"
 
 /**
@@ -10,8 +9,10 @@
  */
 int AirFlow::begin()
 {
+	#ifdef AIR_FLOW_SENSOR
 	flowSensor = new SFM3X00(SFM_ADDR);
 	flowSensor->begin();
+	#endif
 
 	return 0;
 }
@@ -23,7 +24,9 @@ int AirFlow::begin()
  */
 double AirFlow::readFlow()
 {
-	// this->flow = flowSensor->readFlow();
+	#ifdef AIR_FLOW_SENSOR
+	this->flow = flowSensor->readFlow();
+	#endif
 	return this->flow;
 }
 
@@ -36,5 +39,3 @@ double AirFlow::get_flow()
 {
 	return this->flow;
 }
-
-#endif	// AIR_FLOW_SENSOR
