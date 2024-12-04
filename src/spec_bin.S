@@ -10,5 +10,5 @@
 .global specs_bin
 
 specs_bin:
-	.incbin "./r2u2_spec.bin"
-	.word 1300
+	.incbin "./r2u2_spec3.bin"
+	.word 2000
