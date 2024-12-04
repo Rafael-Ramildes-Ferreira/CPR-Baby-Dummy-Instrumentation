@@ -28,14 +28,9 @@
 
 #define PADDING {0,0,0,0}
 
-// Adafruit_VL6180X dist_sensor = Adafruit_VL6180X();
 BlueToothCommunicator *communicator;
-#ifdef DISTANCE_SENSOR
 ChestCompression *chest;
-#endif  // DISTANCE_SENSOR
-#ifdef AIR_FLOW_SENSOR
 AirFlow air_flow;
-#endif  // AIR_FLOW_SENSOR
 Runtime_Monitor monitor;
 
 TimerInterruption trace_export(TIMER_3,30);
@@ -63,23 +58,18 @@ void setup() {
   Serial.println("Começando");
 #endif
   
-  #ifdef DISTANCE_SENSOR
   chest = new ChestCompression();
-  chest->begin();
-  // if(!(chest->begin())){
-  //   error_handler();
-  // }
+  if(!(chest->begin())){
+    error_handler();
+  }
 #ifdef DEBUG
   Serial.println("chest.begin()");
 #endif
-  #endif
 
-  #ifdef AIR_FLOW_SENSOR
   air_flow.begin();
 #ifdef DEBUG
   Serial.println("air_flow.begin();");
 #endif
-  #endif
 
   communicator = new BlueToothCommunicator();
 #ifdef DEBUG
@@ -143,11 +133,11 @@ void loop() {
     monitor.update_bool_signal(4,data_sent);
     data_sent = false;
     monitor.tic();
-    printf("----------");
+    printf("----------\n");
     
     #ifdef DEBUG
     #ifdef DISTANCE_SENSOR
-    printf("\n[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
+    printf("[%d] Distance: %lf\n",monitor_timeStamp,chest->get_distance());
     #endif  // DISTANCE_SENSOR
     
     #ifdef FREQUENCY_ON_ESP

@@ -23,7 +23,12 @@ int ChestCompression::begin(){
 	this->last_peak_time = millis();
 #endif
 
+  
+  #ifdef DISTANCE_SENSOR
   return this->dist_sensor.begin();
+  #else
+  return 1;
+  #endif
 }
 
 /**
@@ -31,6 +36,7 @@ int ChestCompression::begin(){
  * @returns The calculated distance
 */
 double ChestCompression::calc_distance(){
+  #ifdef DISTANCE_SENSOR
 	// Filter values
 	static double yn = 0, yn1 = 0, yn2 = 0, xn = 0, xn1 = 0;
 
@@ -60,6 +66,7 @@ double ChestCompression::calc_distance(){
 			// Serial.println(dist_sensor.readRangeStatus());
 		#endif
 	}
+  #endif  // DISTANCE_SENSOR
 
   return this->distance;
 }
